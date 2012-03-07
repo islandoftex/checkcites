@@ -20,7 +20,7 @@ Now we have both sets, let's do the math! If we want to get all undefined refere
 
 For unused references in our `.bib` file(s), we go with:
 
-[Unused references](http://latex.codecogs.com/png.latex?%5CLARGE%20B%20-%20A%20%3D%20%5C%7B%20x%20%3A%20x%20%5Cin%20B%2C%20x%20%5Cnotin%20A%20%5C%7D)
+![Unused references](http://latex.codecogs.com/png.latex?%5CLARGE%20B%20-%20A%20%3D%20%5C%7B%20x%20%3A%20x%20%5Cin%20B%2C%20x%20%5Cnotin%20A%20%5C%7D)
 
 ## Usage
 
