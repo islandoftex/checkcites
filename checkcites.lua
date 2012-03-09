@@ -17,6 +17,8 @@
 -- The Current Maintainers of this work are the original authors.
 --
 -- This work consists of the file checkcites.lua.
+--
+-- Project page: http://github.com/cereda/checkcites
 -- ******************************************************************
 
 -- version and date, to be updated on each release/commit
