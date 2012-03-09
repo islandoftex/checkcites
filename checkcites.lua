@@ -1,4 +1,4 @@
-#!/usr/bin/env lua
+#!/usr/bin/env texlua
 -- ******************************************************************
 -- checkcites.lua
 -- Copyright 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
