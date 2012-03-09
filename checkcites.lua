@@ -1,3 +1,4 @@
+#!/usr/bin/env lua
 -- ******************************************************************
 -- checkcites.lua
 -- Copyright 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
