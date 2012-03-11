@@ -1,0 +1,101 @@
+checkcites.lua -- Version 1.0g from March 7, 2012.
+==================================================
+
+License
+-------
+
+Copyright 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
+
+- Enrico dot Gregorio at univr dot it
+- cereda at users dot sf dot net
+
+This script is licensed under the LaTeX Project Public License.
+If you want to support LaTeX development by a donation, the best
+way to do this is donating to the TeX Users Group.
+
+About
+-----
+
+checkcites is a Lua script written for the sole purpose of detecting
+unused or undefined references from both LaTeX auxiliary or
+bibliography files. We use 'unused reference' to refer to the
+reference present the bibliography file -- with the '.bib'
+extension -- but not cited in the '.tex' file. The 'undefined
+reference' is exactly the opposite, that is, the items cited in the
+'.tex' file, but not present in the '.bib' file.
+
+The original idea came from a question posted in the TeX.sx community
+about how to check which bibliography entries were not used. We
+decided to write a script to check references. We opted for Lua,
+since it's a very straightforward language and it has an interpreter
+available on every modern TeX distribution.
+
+Installation
+------------
+
+1. Create a new directory named 'checkcites' inside the 'scripts'
+   directory of your TEXMF tree and copy the 'checkcites.lua' inside
+   the new directory. In TeX Live, the new directory would be:
+
+   texlive/<year>/texmf/scripts/checkcites
+
+2. Rebuild the filename databases with the proper distro tool,
+   e.g, running 'mktexlsr'.
+
+3. Create a symbolic link to the newly created script inside
+   the 'bin' directory of your TeX distro. In TeX Live, the
+   full path is:
+
+   texlive/<year>/bin/<arch>
+
+   For TeX Live:
+
+   Win32: make a copy of 'runscript.exe' inside the very same
+          location (i.e, 'bin/win32') and rename it to
+          'checkcites.exe'.
+
+   Linux: create a symbolic link (i.e, 'ln -s') inside the 'bin'
+          directory, targeting the script set in #1. Name it
+          'checkcites' and give it proper execute ('x') permission.
+
+Usage
+-----
+
+The script is pretty simple to use. The only requirement is a recent
+TeX distribution, such as TeX Live. Then run checkcites:
+
+$ checkcites
+
+It will print the script usage. The only required argument is the
+'.aux' file which is generated when you compile your '.tex' file.
+If your main document is named 'foo.tex', you will have a 'foo.aux'
+file too. To run the script on that file, go with:
+
+$ checkcites foo.aux
+
+checkcites allows an additional argument that will tell it how to
+behave. For example
+
+$ checkcites --unused foo.aux
+
+will make the script only look for unused references in your '.bib'
+file. The argument order doesn't matter, you can also run
+
+$ checkcites foo.aux --unused
+
+and get the same behaviour. Similarly, you can use
+
+$ checkcites --undefined foo.aux
+
+to make the script only look for undefined references in your
+'.tex' file. If you want checkcites to look for both unused and
+undefined references, go with
+
+$ checkcites --all foo.aux
+
+If no special argument is provided, --all is set as default.
+
+Official code repository
+------------------------
+
+http://github.com/cereda/checkcites
