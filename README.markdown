@@ -1,6 +1,6 @@
 # checkcites.lua
 
-> **Current stable version:** 1.0g from March 7, 2012
+> **Current stable version:** 1.0h from March 16, 2012
 
 ## The script
 
