@@ -15,7 +15,7 @@
 
 \newcommand{\checkcites}{\texttt{checkcites}}
 \newcommand{\email}[1]{\small\texttt{#1}}
-\newcommand{\version}{Version 1.0g from March 7, 2012.}
+\newcommand{\version}{Version 1.0h from March 16, 2012.}
 
 \newenvironment{infoblock}[1]
   {\par\addvspace{\medskipamount}
@@ -79,9 +79,9 @@ values removed --~in other words, the table becomes a set.  Let's call
 $A$ the set of citations.
 
 \begin{infoblock}{Attention!}
-If \verb|\citation{*}| is found, the script ends, mainly because all
-citations will be used in this case. We opted for ending the script
-instead of ignoring this step.
+If \verb|\citation{*}| is found, \checkcites\ will issue a message
+telling that \verb|\nocite{*}| is in the \verb|.tex| document, but
+the script will do the check nonetheless.
 \end{infoblock}
 
 At the same time \checkcites\ also looks for bibliography data, in the
