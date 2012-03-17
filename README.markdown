@@ -65,6 +65,10 @@ You can also find us in the [TeX, LaTeX and Friends](http://chat.stackexchange.c
 
 ## Changelog
 
+### 1.0h
+
+If `\citation{*}` is found, `checkcites` will issue a message telling that `\nocite{*}` is in the `.tex` document, but the script will do the check nonetheless.
+
 ### 1.0g
 
 First public release. Yay!
