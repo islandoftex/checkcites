@@ -67,7 +67,7 @@ You can also find us in the [TeX, LaTeX and Friends](http://chat.stackexchange.c
 
 ### 1.0i
 
-Fixed issue #1: bibliography entries with leading whitespace before the `cite` key were causing problems because the whitespace was being extracted alongside the key. The patch was kindly provided by Constantine Lignos.
+Fixed [issue #1](https://github.com/cereda/checkcites/pull/1): bibliography entries with leading whitespace before the `cite` key were causing problems because the whitespace was being extracted alongside the key. The patch was kindly provided by Constantine Lignos.
 
 ### 1.0h
 
