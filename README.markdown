@@ -65,6 +65,10 @@ You can also find us in the [TeX, LaTeX and Friends](http://chat.stackexchange.c
 
 ## Changelog
 
+### 1.0i
+
+Fixed issue #1: bibliography entries with leading whitespace before the `cite` key were causing problems because the whitespace was being extracted alongside the key. The patch was kindly provided by Constantine Lignos.
+
 ### 1.0h
 
 If `\citation{*}` is found, `checkcites` will issue a message telling that `\nocite{*}` is in the `.tex` document, but the script will do the check nonetheless.
