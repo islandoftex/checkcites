@@ -311,7 +311,7 @@ function getDataFromBibFiles(theBibFiles)
 			for currentLine in fileHandler:lines() do
 
                 -- if a reference is found
-				for reference in string.gmatch(currentLine, '@%w+{(.+),') do
+				for reference in string.gmatch(currentLine, '@%w+{%s*(.+),') do
 
                     -- insert the reference
 					table.insert(theReferences, reference)
