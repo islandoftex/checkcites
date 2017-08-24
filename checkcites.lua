@@ -6,7 +6,7 @@
 -- This work may be distributed and/or modified under the conditions
 -- of the LaTeX  Project Public License, either version  1.3 of this
 -- license or (at your option) any later version.
--- 
+--
 -- The latest version of this license is in
 --
 -- http://www.latex-project.org/lppl.txt
@@ -20,6 +20,11 @@
 --
 -- Project repository: http://github.com/cereda/checkcites
 -- -----------------------------------------------------------------
+
+-- Checks if the table contains the element.
+-- @param a Table.
+-- @param hit Element.
+-- @return Boolean value if the table contains the element.
 local function exists(a, hit)
   for _, v in ipairs(a) do
     if v == hit then
@@ -29,6 +34,11 @@ local function exists(a, hit)
   return false
 end
 
+-- Parses the list of arguments based on a configuration map.
+-- @param map Configuration map.
+-- @param args List of command line arguments.
+-- @return Table containing the valid keys and entries.
+-- @return Table containing the invalid keys.
 local function parse(map, args)
   local keys, key, unknown = {}, 'unpaired', {}
   local a, b
@@ -96,6 +106,10 @@ local function parse(map, args)
   return keys, unknown
 end
 
+-- Calculates the difference between two tables.
+-- @param a First table.
+-- @param b Second table.
+-- @return Table containing the difference between two tables.
 local function difference(a, b)
   local result = {}
   for _, v in ipairs(a) do
@@ -106,6 +120,9 @@ local function difference(a, b)
   return result
 end
 
+-- Splits the string based on a pattern.
+-- @param str String.
+-- @param pattern Pattern.
 local function split(str, pattern)
   local result = {}
   string.gsub(str, pattern, function(a)
@@ -113,6 +130,9 @@ local function split(str, pattern)
   return result
 end
 
+-- Reads lines from a file.
+-- @param file File.
+-- @returns Table representing the lines.
 local function read(file)
   local handler = io.open(file, 'r')
   local lines = {}
@@ -125,12 +145,18 @@ local function read(file)
   return lines
 end
 
+-- Normalizes the string, removing leading and trailing spaces.
+-- @param str String.
+-- @return Normalized string without leading and trailing spaces.
 local function normalize(str)
   local result, _ = string.gsub(str, '^%s', '')
   result, _ = string.gsub(result, '%s$', '')
   return result
 end
 
+-- Checks if the element is in a blacklist.
+-- @param a Element.
+-- @return Boolean value if the element is blacklisted.
 local function blacklist(a)
   local list = {}
   for _, v in ipairs(list) do
@@ -141,6 +167,9 @@ local function blacklist(a)
   return false
 end
 
+-- Extracts the biblographic key.
+-- @param lines Lines of a file.
+-- @return Table containing bibliographic keys.
 local function extract(lines)
   local result = {}
   for _, line in ipairs(lines) do
@@ -156,6 +185,11 @@ local function extract(lines)
   return result
 end
 
+-- Gets a pluralized word based on a counter.
+-- @param i Counter.
+-- @param a Word in singular.
+-- @param b Word in plural.
+-- @return Either the first or second word based on the counter.
 local function plural(i, a, b)
   if i == 1 then
     return a
@@ -164,8 +198,14 @@ local function plural(i, a, b)
   end
 end
 
+-- Backend namespace
 local backends = {}
 
+-- Gets data from auxiliary files (BibTeX).
+-- @param lines Lines of a file.
+-- @return Boolean indicating if an asterisk was found.
+-- @return Table containing the citations.
+-- @return Table containing the bibliography files.
 backends.bibtex = function(lines)
   local citations, bibliography = {}, {}
   local asterisk, parts, hit = false
@@ -200,6 +240,11 @@ backends.bibtex = function(lines)
   return asterisk, citations, bibliography
 end
 
+-- Gets data from auxiliary files (Biber).
+-- @param lines Lines of a file.
+-- @return Boolean indicating if an asterisk was found.
+-- @return Table containing the citations.
+-- @return Table containing the bibliography files.
 backends.biber = function(lines)
   local citations, bibliography = {}, {}
   local asterisk, parts, hit = false
@@ -236,6 +281,9 @@ backends.biber = function(lines)
   return asterisk, citations, bibliography
 end
 
+-- Counts the number of elements of a nominal table.
+-- @param t Table.
+-- @return Table size.
 local function count(t)
   local counter = 0
   for _, _ in pairs(t) do
@@ -244,6 +292,10 @@ local function count(t)
   return counter
 end
 
+-- Repeats the provided char a certain number of times.
+-- @param c Char.
+-- @param w Number of times.
+-- @return String with a char repeated a certain number of times.
 local function pad(c, w)
   local r = c
   while #r < w do
@@ -252,6 +304,10 @@ local function pad(c, w)
   return r
 end
 
+-- Adds the extension if the file does not have it.
+-- @param file File.
+-- @param extension Extension.
+-- @return File with proper extension.
 local function sanitize(file, extension)
   extension = '.' .. extension
   if string.sub(file, -#extension) ~= extension then
@@ -260,6 +316,9 @@ local function sanitize(file, extension)
   return file
 end
 
+-- Flattens a table of tables into only one table.
+-- @param t Table.
+-- @return Flattened table.
 local function flatten(t)
   local result = {}
   for _, v in ipairs(t) do
@@ -272,6 +331,10 @@ local function flatten(t)
   return result
 end
 
+-- Applies a function to elements of a table.
+-- @param c Table.
+-- @param f Function.
+-- @return A new table.
 local function apply(c, f)
   local result = {}
   for _, v in ipairs(c) do
@@ -280,6 +343,10 @@ local function apply(c, f)
   return result
 end
 
+-- Wraps a string based on a line width.
+-- @param str String.
+-- @param size Line width.
+-- @return Wrapped string.
 local function wrap(str, size)
   local parts = split(str, '[^%s]+')
   local r, l = '', ''
@@ -295,6 +362,7 @@ local function wrap(str, size)
   return r
 end
 
+-- Prints the script header.
 local function header()
 print("     _           _       _ _")
 print(" ___| |_ ___ ___| |_ ___|_| |_ ___ ___")
@@ -308,8 +376,13 @@ print()
              'Roberto Massa Cereda', 74))
 end
 
+-- Operation namespace
 local operations = {}
 
+-- Reports the unused references.
+-- @param citations Citations.
+-- @param references References.
+-- @return Integer representing the status.
 operations.unused = function(citations, references)
   print()
   print(pad('-', 74))
@@ -332,6 +405,10 @@ operations.unused = function(citations, references)
   end
 end
 
+-- Reports the undefined references.
+-- @param citations Citations.
+-- @param references References.
+-- @return Integer value indicating the status.
 operations.undefined = function(citations, references)
   print()
   print(pad('-', 74))
@@ -354,6 +431,10 @@ operations.undefined = function(citations, references)
   end
 end
 
+-- Reports both unused and undefined references.
+-- @param citations Citations.
+-- @param references References.
+-- @return Integer value indicating the status.
 operations.all = function(citations, references)
   local x, y
   x = operations.unused(citations, references)
@@ -365,6 +446,9 @@ operations.all = function(citations, references)
   end
 end
 
+-- Checks if a file exists.
+-- @param file File.
+-- @return Boolean value indicating if the file exists.
 local function valid(file)
   local handler = io.open(file, 'r')
   if handler then
@@ -375,6 +459,9 @@ local function valid(file)
   end
 end
 
+-- Filters a table of files, keeping the inexistent ones.
+-- @param files Table.
+-- @return Table of inexistent files.
 local function validate(files)
   local result = {}
   for _, v in ipairs(files) do
@@ -385,6 +472,9 @@ local function validate(files)
   return result
 end
 
+-- Main function.
+-- @param args Command line arguments.
+-- @return Integer value indicating the status
 local function checkcites(args)
   header()
 
@@ -624,5 +714,8 @@ local function checkcites(args)
   return operations[check](citations, references)
 end
 
+-- Call and exit
 os.exit(checkcites(arg))
+
+-- EOF
 
