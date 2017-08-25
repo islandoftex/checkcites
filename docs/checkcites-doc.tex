@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage[english]{babel}
+\usepackage{tgpagella}
 
 \usepackage[margin=1in]{geometry}
 
@@ -15,7 +16,7 @@
 
 \newcommand{\checkcites}{\texttt{checkcites}}
 \newcommand{\email}[1]{\small\texttt{#1}}
-\newcommand{\version}{Version 1.0i from December 18, 2012.}
+\newcommand{\version}{Version 2.0 from August 25, 2017.}
 
 \newenvironment{infoblock}[1]
   {\par\addvspace{\medskipamount}
@@ -43,25 +44,25 @@
 \section{Introduction}
 \label{sec:intro}
 
-\checkcites\ is a Lua script written for the sole purpose of detecting
-unused or undefined references from both \LaTeX{} auxiliary or
-bibliography files. We use \emph{unused reference} to refer to the
-reference present the bibliography file --~with the \verb|.bib|
-extension~-- but not cited in the \verb|.tex| file. The
-\emph{undefined reference} is exactly the opposite, that is, the items
-cited in the \texttt{.tex} file, but not present in the \verb|.bib|
-file.
+\checkcites\  is  a  Lua  script  written for  the  sole  purpose  of
+detecting unused or undefined  references from both \LaTeX\ auxiliary
+or bibliography  files. We  use the  term \emph{unused  reference} to
+refer  to the  reference  present the  bibliography file~--~with  the
+\verb|.bib|  extension~--~but  not  cited in  the  \verb|.tex|  file.
+The  term \emph{undefined  reference} is  exactly the  opposite, i.e,
+the  item cited  in  the \verb|.tex|  file, but  not  present in  the
+\verb|.bib| file.
 
-The original idea came from a question posted in the
-\href{http://tex.stackexchange.com}{TeX.sx community} about
-\href{http://tex.stackexchange.com/questions/43276}{how to check which
-bibliography entries were not used}. We decided to write a script to
-check references. We opted for Lua, since it's a very straightforward
-language and it has an interpreter available on every modern \TeX\
-distribution.
+The    original     idea    came     from    a     question    posted
+in    the     \TeX\    community    at    Stack     Exchange    about
+\href{http://tex.stackexchange.com/questions/43276}{how    to   check
+which  bibliography entries  were not  used}. We  decided to  write a
+script  to check  references. We  opted for  Lua, since it is a  very
+straightforward language and it has an interpreter available on every
+modern \TeX\ distribution.
 
 \begin{infoblock}{Attention!}
-\checkcites\ is known to run with the most recent \verb|texlua| and
+\checkcites\ is known  to run with the most  recent \verb|texlua| and
 \verb|lua| interpreters. Unfortunately, the code is incompatible with
 interpreters prior to the Lua 5.1 language specification.
 \end{infoblock}
@@ -69,68 +70,79 @@ interpreters prior to the Lua 5.1 language specification.
 \section{How the script works}
 \label{sec:howto}
 
-\checkcites\ uses the generated \verb|.aux| file to start the
-analysis. The first step is to extract all citations found, in the
-form of \verb|\citation{a}|. For every \verb|\citation| line found,
-\checkcites\ will extract the citations and add them to a table, even
-for multiple citations separated by commas, like
-\verb|\citation{a,b,c}|. Then the citations table has all duplicate
-values removed --~in other words, the table becomes a set.  Let's call
-$A$ the set of citations.
+\checkcites\  uses  the  generated   auxiliary  files  to  start  the
+analysis. From version 2.0 on, the scripts supports two backends:
+
+\begin{description}
+\item[\texttt{bibtex}]   Default   behavior,    the   script   checks
+\verb|.aux|   files   looking  for   citations,   in   the  form   of
+\verb|\citation{a}|.   For   every   \verb|\citation|   line   found,
+\checkcites\  will   extract  the  citations   and  add  them   to  a
+table,  even  for  multiple   citations  separated  by  commas,  like
+\verb|\citation{a,b,c}|.  The citation  table  contains no  duplicate
+values. At  the same  time \checkcites\  also looks  for bibliography
+data,  in  the  form  of  \verb|\bibdata{a}|.  Similarly,  for  every
+\verb|\bibdata| line found, the  script will extract the bibliography
+data and add them  to a table, even if they  are separated by commas,
+like \verb|\bibdata{d,e,f}|. Again, no  duplicate values are allowed.
+Stick with this backend if you  are using Bib\TeX\ or Bib\LaTeX\ with
+the \verb|backend=bibtex| package option.
+
+\item[\texttt{biber}]   With   this   backend,  the   script   checks
+\verb|.bcf| files (which are XML-based) looking for citations, in the
+form of  \verb|bcf:citekey| tags.  For every tag  found, \checkcites\
+will extract  the corresponding values and  add them to a  table. The
+citation  table  contains  no  duplicate values.  At  the  same  time
+\checkcites\  also  looks  for  bibliography data,  in  the  form  of
+\verb|bcf:datasource|  tags.  Similarly,  for every  tag  found,  the
+script will  extract the bibliography data  and add them to  a table.
+Again, no  duplicate values are  allowed. Stick with this  backend if
+you  are  using Bib\LaTeX\  with  the  default  options or  with  the
+\verb|backend=biber| option explicitly set.
+\end{description}
 
 \begin{infoblock}{Attention!}
-If \verb|\citation{*}| is found, \checkcites\ will issue a message
-telling that \verb|\nocite{*}| is in the \verb|.tex| document, but
-the script will do the check nonetheless.
+If  \verb|\citation{*}|  (Bib\TeX)  or  simply  \verb|*|  (Bib\LaTeX)
+is   found,  \checkcites\   will   issue  a   message  telling   that
+\verb|\nocite{*}| is in the \verb|.tex| document, but the script will
+do the check nonetheless.
 \end{infoblock}
 
-At the same time \checkcites\ also looks for bibliography data, in the
-form of \verb|\bibdata{a}|. Similarly, for every \verb|\bibdata| line
-found, the script will extract the bibliography data and add them to a
-table, even if they are separated by commas, like
-\verb|\bibdata{d,e,f}|. The table has all duplicate values removed.
+Now,  \checkcites\ will  extract  all entries  from the  bibliography
+files found  in the previous  steps, regardless of which  backend was
+used. For  every element in  the bibliography data table,  the script
+will  look  for entries  like  \verb|@BOOK|,  \verb|@ARTICLE| and  so
+forth~--~we actually use  pattern matching for this~--  and add their
+identifiers to a table. No duplicate values are allowed.
 
 \begin{infoblock}{Attention!}
-If no \verb|\bibdata| command is found, the script ends. There's
-nothing to do in this case.
+If \checkcites\ cannot  find a certain bibliography  file, the script
+ends. Make sure  to put the correct name of  the bibliography file in
+your \verb|.tex| file.
 \end{infoblock}
 
-Now, \checkcites\ will extract all entries from the bibliography files
-found in the previous step. For every element in the bibliography data
-table, the script will look for entries like \verb|@BOOK|,
-\verb|@ARTICLE| and so forth --~we actually use pattern matching for
-this~-- and add their identifiers to a table. The script treats all
-\verb|.bib| files as if they were only one. After all files have been
-analyzed and all entries' identifiers extracted, the table has all
-duplicate values removed. Let's call $B$ the set of bibliography
-entries.
-
-\begin{infoblock}{Attention!}
-If \checkcites\ cannot find a certain bibliography file --~that is, a
-\verb|.bib| file~-- the script ends. Make sure to put the correct
-name of the bibliography file in your \verb|.tex| file.
-\end{infoblock}
-
-Now we have both sets $A$ and $B$. In order to get all unused
-references in the \verb|.bib| files, we compute the set difference
+Let  there be  $A$  and $B$  the sets  of  citations and  references,
+respectively.  In  order   to  get  all  unused   references  in  the
+\verb|.bib| files, we compute the set difference:
 \[
 B - A = \{ x : x \in B, x \notin A \}.
-\] 
-Similarly, in order to get all undefined references in the \verb|.tex|
-file, we compute the set difference
+\]
+Similarly,  in  order   to  get  all  undefined   references  in  the
+\verb|.tex| file, we compute the set difference:
 \[
 A - B = \{ x : x \in A, x \notin B \}.
 \]
 If there are either unused or undefined references, \checkcites\ will
-print them in a list format. In Section~\ref{sec:usage} there's a more
-complete explanation on how to use the script.
+print them  in a list  format. In Section~\ref{sec:usage} there  is a
+more complete explanation on how to use the script.
 
 \section{Usage}
 \label{sec:usage}
 
-\checkcites\ is very easy to use. First of all, let's define two files
-that will be used here to explain the script usage. Here's our sample
-bibliography file \verb|example.bib|, with five fictional entries.
+\checkcites\ is  very easy to  use. First of  all, let us  define two
+files that will be used here to explain the script usage. Here is our
+sample  bibliography  file  \verb|example.bib|, with  five  fictional
+entries.
 
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
                    title=Bibliography file, fonttitle=\bfseries,
@@ -176,7 +188,9 @@ bibliography file \verb|example.bib|, with five fictional entries.
 }
 \end{tcblisting}
 
-The second file is our main \LaTeX{} document, \verb|document.tex|.
+The second  file is  our main \LaTeX{}  document, \verb|document.tex|.
+Observe that we will stick with  Bib\TeX\ for now and check Bib\LaTeX\
+later on.
 
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
                    title=Main document, fonttitle=\bfseries,
@@ -185,7 +199,8 @@ The second file is our main \LaTeX{} document, \verb|document.tex|.
 
 \begin{document}
 
-Hello world \cite{foo:2012a,foo:2012c}, how are you \cite{foo:2012f},
+Hello world \cite{foo:2012a,foo:2012c},
+how are you \cite{foo:2012f},
 and goodbye \cite{foo:2012d,foo:2012a}.
 
 \bibliographystyle{plain}
@@ -200,46 +215,81 @@ Open a terminal and run \verb|checkcites|:
 \begin{verbatim}
 $ checkcites
 \end{verbatim}
-\tcblower
+\tcblower\small
 \begin{verbatim}
-checkcites.lua -- a reference checker script (v1.0i)
-Copyright (c) 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
+     _           _       _ _
+ ___| |_ ___ ___| |_ ___|_| |_ ___ ___
+|  _|   | -_|  _| '_|  _| |  _| -_|_ -|
+|___|_|_|___|___|_,_|___|_|_| |___|___|
 
-Usage: checkcites.lua [--all | --unused | --undefined] file.aux
+checkcites.lua -- a reference checker script (v2.0)
+Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
 
---all         Lists all unused and undefined references.
---unused      Lists only unused references in your 'bib' file.
---undefined   Lists only undefined references in your 'tex' file.
-
-If no flag is provided, '--all' is set by default.
-Be sure to have all your 'bib' files in the same directory.
+--------------------------------------------------------------------------
+I am sorry, but you have not provided any command line argument, including
+files to check and options. Make sure to invoke the script with the actual
+arguments. Refer to the user documentation if you are unsure of how this
+tool works. The script will end now.
 \end{verbatim}
 \end{terminal}
 
-If you don't have \checkcites\ installed with your \TeX\ distribution,
-you can run the standalone script \verb|checkcites.lua| with either
-\verb|texlua| or \verb|lua|. We recommend to use \verb|texlua|, as
-it's shipped with all the modern \TeX\ distributions:
+If  you   do  not  have   \checkcites\  installed  with   your  \TeX\
+distribution, you can run the standalone script \verb|checkcites.lua|
+with  either  \verb|texlua|  or   \verb|lua|.  We  recommend  to  use
+\verb|texlua|,  as   it  is  shipped   with  all  the   modern  \TeX\
+distributions:
 \begin{terminal}
 \begin{verbatim}
 $ texlua checkcites.lua
 \end{verbatim}
 \end{terminal}
 
-When you run \checkcites\ without providing any argument to it, the
-script usage will be printed, as seen in the previous output. The only
-required argument is the auxiliary file --~with the \verb|.aux|
-extension~-- which is generated when you compile your main \verb|.tex|
-file. For example, if your main document is named \verb|foo.tex|, you
-probably have a \verb|foo.aux| file too. Let's compile our sample
-document \verb|document.tex|:
+When you run \checkcites\ without providing any argument to it, the a
+message  error  will  appear.  Do  not  panic!  Try  again  with  the
+\verb|--help| flag:
+\begin{terminal}
+\begin{verbatim}
+$ checkcites --help
+\end{verbatim}
+\tcblower\small
+\begin{verbatim}
+     _           _       _ _
+ ___| |_ ___ ___| |_ ___|_| |_ ___ ___
+|  _|   | -_|  _| '_|  _| |  _| -_|_ -|
+|___|_|_|___|___|_,_|___|_|_| |___|___|
+
+checkcites.lua -- a reference checker script (v2.0)
+Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+
+Usage: checkcites.lua [ [ --all | --unused | --undefined ] [ --backend
+<arg> ] <file> [ <file 2> ... <file n> ] | --help | --version ]
+
+-a,--all           list all unused and undefined references
+-u,--unused        list only unused references in your bibliography files
+-U,--undefined     list only undefined references in your TeX source file
+-b,--backend <arg> set the backend-based file lookup policy
+-h,--help          print the help message
+-v,--version       print the script version
+
+Unless specified, the script lists all unused and undefined references by
+default. Also, the default backend is set to "bibtex". Please refer to the
+user documentation for more details.
+\end{verbatim}
+\end{terminal}
+
+Since  we  are  using  Bib\TeX,  we   do  not  need  to  set  up  the
+backend!  Simply  provide  the  auxiliary file~--~the  one  with  the
+\verb|.aux|  extension~--~which is  generated when  you compile  your
+main \verb|.tex|  file. For example,  if your main document  is named
+\verb|foo.tex|, you probably  have a \verb|foo.aux| file  too. Let us
+compile our sample document \verb|document.tex|:
 \begin{terminal}
 \begin{verbatim}
 $ pdflatex document.tex
 \end{verbatim}
 \end{terminal}
 
-After running \verb|pdflatex| on our \verb|.tex| file, there's now a
+After running \verb|pdflatex| on our \verb|.tex| file, there is now a
 \verb|document.aux| file in our work directory.
 
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
@@ -261,31 +311,49 @@ Now we can run \checkcites\ on the \verb|document.aux| file:
 \begin{verbatim}
 $ checkcites document.aux
 \end{verbatim}
-\tcblower
+\tcblower\small
 \begin{verbatim}
-checkcites.lua -- a reference checker script (v1.0i)
-Copyright (c) 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
+     _           _       _ _
+ ___| |_ ___ ___| |_ ___|_| |_ ___ ___
+|  _|   | -_|  _| '_|  _| |  _| -_|_ -|
+|___|_|_|___|___|_,_|___|_|_| |___|___|
 
-I found 4 citation(s).
-Great, there's only one 'bib' file. Let me check it.
-I found 5 reference(s).
+checkcites.lua -- a reference checker script (v2.0)
+Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
 
-Unused reference(s) in your bibliography file(s): 2
-- foo:2012b
-- foo:2012e
+Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
+me check this file and extract the references. Please wait a moment.
 
-Undefined reference(s) in your TeX file: 1
-- foo:2012f
+Fantastic, I found 5 references in 1 bibliography file. Please wait a
+moment while the reports are generated.
+
+--------------------------------------------------------------------------
+Report of unused references in your TeX document (that is, references
+present in bibliography files, but not cited in the TeX source file)
+--------------------------------------------------------------------------
+
+Unused references in your TeX document: 2
+=> foo:2012b
+=> foo:2012e
+
+--------------------------------------------------------------------------
+Report of undefined references in your TeX document (that is, references
+cited in the TeX source file, but not present in the bibliography files)
+--------------------------------------------------------------------------
+
+Undefined references in your TeX document: 1
+=> foo:2012f
 \end{verbatim}
 \end{terminal}
 
-As we can see in the script output, \checkcites\ analyzed both
-\verb|.aux| and \verb|.bib| files and found two unused references in
-the bibliography file --~\verb|foo:2012b| and \verb|foo:2012e|~-- and
-one undefined reference in the document --~\verb|foo:2012f|.
+As  we   can  see  in   the  script  output,   \checkcites\  analyzed
+both  \verb|.aux|  and \verb|.bib|  files  and  managed to  find  two
+unused  references   in  the   bibliography  file~--~\verb|foo:2012b|
+and   \verb|foo:2012e|~--~and   one   undefined  reference   in   the
+document~--~\verb|foo:2012f|.
 
-\checkcites\ allows a command line switch that will tell it how to
-behave. For example,
+\checkcites\ allows a couple of command  line flags that will tell it
+how to behave. For example, check this command line:
 
 \begin{terminal}
 \begin{verbatim}
@@ -293,9 +361,9 @@ $ checkcites --unused document.aux
 \end{verbatim}
 \end{terminal}
 
-The \verb|--unused| flag will make the script only look for unused
-references in the \verb|.bib| file. The argument order doesn't matter,
-you can also run
+The \verb|--unused|  flag will make  the script only look  for unused
+references  in the  \verb|.bib|  file. The  argument  order does  not
+matter, you can also run:
 
 \begin{terminal}
 \begin{verbatim}
@@ -303,7 +371,7 @@ $ checkcites document.aux --unused
 \end{verbatim}
 \end{terminal}
 
-The script will behave the same. Similarly, you can use
+The script will behave the same. Similarly, you can use:
 
 \begin{terminal}
 \begin{verbatim}
@@ -311,9 +379,9 @@ $ checkcites --undefined document.aux
 \end{verbatim}
 \end{terminal}
 
-The \verb|--undefined| flag will make the script only look for
-undefined references in the \verb|.tex| file. If you want \checkcites\
-to look for both unused and undefined references, run:
+The  \verb|--undefined|   flag  will   make  the  script   only  look
+for  undefined  references  in  the \verb|.tex|  file.  If  you  want
+\checkcites\ to look for both unused and undefined references, run:
 
 \begin{terminal}
 \begin{verbatim}
@@ -321,15 +389,113 @@ $ checkcites --all document.aux
 \end{verbatim}
 \end{terminal}
 
-If no special argument is provided, the \verb|--all| flag is set as default.
+If no  special argument is provided,  the \verb|--all| flag is  set as
+default.
+
+Observe  that  our  example  relied  on  the  default  backend,  which
+uses  Bib\TeX.  Let   us  change  our  document  a  bit   to  make  it
+Bib\LaTeX-compliant:
+
+\begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
+                   title=Main document, fonttitle=\bfseries,
+                   listing options={columns=fullflexible,basicstyle=\ttfamily}}
+\documentclass{article}
+
+\usepackage{biblatex}
+\addbibresource{example.bib}
+
+\begin{document}
+
+Hello world \cite{foo:2012a,foo:2012c},
+how are you \cite{foo:2012f},
+and goodbye \cite{foo:2012d,foo:2012a}.
+
+\printbibliography
+
+\end{document}
+\end{tcblisting}
+
+As usual, let's compile our sample document \verb|document.tex|:
+
+\begin{terminal}
+\begin{verbatim}
+$ pdflatex document.tex
+\end{verbatim}
+\end{terminal}
+
+After running \verb|pdflatex| on our \verb|.tex| file, there is now a
+\verb|document.aux| file in our work directory, as expected. However,
+since  we are  using Bib\LaTeX\  as well,  there is  another file  of
+interest  in  our  working  directory, one  that  has  a  \verb|.bcf|
+extension! In  order to  run \checkcites\ on  that specific  file, we
+need to provide the \verb|biber| backend:
+
+\begin{terminal}
+\begin{verbatim}
+$ checkcites --backend biber document.bcf
+\end{verbatim}
+\end{terminal}
+
+We can  even omit  the file extension,  the script  will automatically
+assign one based on the current backend:
+
+\begin{terminal}
+\begin{verbatim}
+$ checkcites --backend biber document
+\end{verbatim}
+\end{terminal}
+
+Now, let  us run \checkcites\  on the \verb|.bcf| file,  providing the
+\verb|biber| backend:
+
+\begin{terminal}
+\begin{verbatim}
+$ checkcites --backend biber document.bcf
+\end{verbatim}
+\tcblower\small
+\begin{verbatim}
+     _           _       _ _
+ ___| |_ ___ ___| |_ ___|_| |_ ___ ___
+|  _|   | -_|  _| '_|  _| |  _| -_|_ -|
+|___|_|_|___|___|_,_|___|_|_| |___|___|
+
+checkcites.lua -- a reference checker script (v2.0)
+Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+
+Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
+me check this file and extract the references. Please wait a moment.
+
+Fantastic, I found 5 references in 1 bibliography file. Please wait a
+moment while the reports are generated.
+
+--------------------------------------------------------------------------
+Report of unused references in your TeX document (that is, references
+present in bibliography files, but not cited in the TeX source file)
+--------------------------------------------------------------------------
+
+Unused references in your TeX document: 2
+=> foo:2012b
+=> foo:2012e
+
+--------------------------------------------------------------------------
+Report of undefined references in your TeX document (that is, references
+cited in the TeX source file, but not present in the bibliography files)
+--------------------------------------------------------------------------
+
+Undefined references in your TeX document: 1
+=> foo:2012f
+\end{verbatim}
+\end{terminal}
+
+That is all, folks!
 
 \section{License}
 \label{sec:license}
 
-This script is licensed under the
-\href{http://www.latex-project.org/lppl/}{LaTeX Project Public
-License}. If you want to support \LaTeX{} development by a donation,
-the best way to do this is donating to the
+This        script        is         licensed        under        the
+\href{http://www.latex-project.org/lppl/}{\LaTeX\    Project   Public
+License}.  If  you   want  to  support  \LaTeX{}   development  by  a
+donation,   the  best   way   to   do  this   is   donating  to   the
 \href{http://www.tug.org/}{TeX Users Group}.
 
 \begin{infoblock}{Official code repository}

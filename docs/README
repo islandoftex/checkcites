@@ -1,10 +1,10 @@
-checkcites.lua -- Version 1.0i from December 18, 2012.
-======================================================
+checkcites.lua -- Version 2.0 from August 25, 2017.
+===================================================
 
 License
 -------
 
-Copyright 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
+Copyright (c) 2012, 2017 Enrico Gregorio, Paulo Roberto Massa Cereda
 
 - Enrico dot Gregorio at univr dot it
 - cereda at users dot sf dot net
@@ -17,18 +17,18 @@ About
 -----
 
 checkcites is a Lua script written for the sole purpose of detecting
-unused or undefined references from both LaTeX auxiliary or
-bibliography files. We use 'unused reference' to refer to the
-reference present the bibliography file -- with the '.bib'
-extension -- but not cited in the '.tex' file. The 'undefined
-reference' is exactly the opposite, that is, the items cited in the
-'.tex' file, but not present in the '.bib' file.
+unused or undefined references from both LaTeX auxiliary or bibliography
+files. We use the term *unused reference* to refer to the reference
+present the bibliography file -- with the '.bib' extension -- but not
+cited in the '.tex' file. The term *undefined reference* is exactly the
+opposite, i.e, the item cited in the '.tex' file, but not present in the
+'.bib' file.
 
-The original idea came from a question posted in the TeX.sx community
-about how to check which bibliography entries were not used. We
-decided to write a script to check references. We opted for Lua,
-since it's a very straightforward language and it has an interpreter
-available on every modern TeX distribution.
+The original idea came from a question posted in the TEX community at
+Stack Exchange about how to check which bibliography entries were not
+used. We decided to write a script to check references. We opted for
+Lua, since it's a very straightforward language and it has an
+interpreter available on every modern TEX distribution.
 
 Installation
 ------------
@@ -62,14 +62,50 @@ Usage
 -----
 
 The script is pretty simple to use. The only requirement is a recent
-TeX distribution, such as TeX Live. Then run checkcites:
+TeX distribution, such as TeX Live.
+
+checkcites uses the generated auxiliary files to start the analysis.
+From version 2.0 on, the scripts supports two backends:
+
+-> bibtex
+
+Default behavior, the script checks '.aux' files looking for citations,
+in the form of '\citation{a}'. For every \citation line found, checkcites
+will extract the citations and add them to a table, even for multiple
+citations separated by commas, like '\citation{a,b,c}'. The citation
+table contains no duplicate values. At the same time checkcites also
+looks for bibliography data, in the form of '\bibdata{a}'. Similarly,
+for every '\bibdata' line found, the script will extract the bibliography
+data and add them to a table, even if they are separated by commas, like
+'\bibdata{d,e,f}'. Again, no duplicate values are allowed. Stick with this
+backend if you are using BibTeX or BibLaTeX with the 'backend=bibtex'
+package option.
+
+-> biber
+
+With this backend, the script checks '.bcf files' (which are XML-based)
+looking for citations, in the form of 'bcf:citekey' tags. For every tag
+found, checkcites will extract the corresponding values and add them to
+a table. The citation table contains no duplicate values. At the same
+time checkcites also looks for bibliography data, in the form of
+'bcf:datasource' tags. Similarly, for every tag found, the script will
+extract the bibliography data and add them to a table. Again, no duplicate
+values are allowed. Stick with this backend if you are using BibLaTeX with
+the default options or with the 'backend=biber' option explicitly set.
+
+Open a terminal and run checkcites:
 
 $ checkcites
 
-It will print the script usage. The only required argument is the
-'.aux' file which is generated when you compile your '.tex' file.
-If your main document is named 'foo.tex', you will have a 'foo.aux'
-file too. To run the script on that file, go with:
+When you run checkcites without providing any argument to it, the a message
+error will appear. Do not panic! Try again with the --help flag:
+
+$ checkcites --help
+
+If you are using BibTeX, simply provide the auxiliary file -- the one with
+the '.aux' extension -- which is generated when you compile your main '.tex'
+file. For example, if your main document is named 'foo.tex', you probably
+have a 'foo.aux' file too. Then simply invoke
 
 $ checkcites foo.aux
 
@@ -94,6 +130,18 @@ undefined references, go with
 $ checkcites --all foo.aux
 
 If no special argument is provided, --all is set as default.
+
+If you are using BibLaTeX, we need to inspect '.bcf' files instead. For
+example, if your main document is named 'foo.tex', you probably have a
+'foo.bcf' file too. Then invoke
+
+$ checkcites foo.aux --backend biber
+
+Note the --backend flag used for BibLaTeX support. We can even omit the
+file extension, the script will automatically assign one based on the
+current backend.
+
+That is it, folks!
 
 Official code repository
 ------------------------
