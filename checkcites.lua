@@ -167,15 +167,28 @@ local function blacklist(a)
   return false
 end
 
+-- Checks if the key is allowed.
+-- @param key The key itself.
+-- @return Boolean value if the key is allowed.
+local function allowed(key)
+  local keys = { 'string' }
+  for _, entry in ipairs(keys) do
+    if string.lower(key) == entry then
+      return false
+    end
+  end
+  return true
+end
+
 -- Extracts the biblographic key.
 -- @param lines Lines of a file.
 -- @return Table containing bibliographic keys.
 local function extract(lines)
   local result = {}
   for _, line in ipairs(lines) do
-    local hit = string.match(line,
-                '^%s*%@%w+%s*{%s*(.+),')
-    if hit then
+    local key, hit = string.match(line,
+                '^%s*%@(%w+%s*){%s*(.+),')
+    if key and allowed(key) then
       if not exists(result, hit) then
         hit = normalize(hit)
         table.insert(result, hit)
