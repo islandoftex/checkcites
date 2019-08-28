@@ -1,3 +1,7 @@
+% arara: pdflatex
+% arara: pdflatex
+% arara: pdflatex
+% arara: clean: { extensions: [ listing, out, aux, log, toc ] }
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
@@ -16,7 +20,7 @@
 
 \newcommand{\checkcites}{\texttt{checkcites}}
 \newcommand{\email}[1]{\small\texttt{#1}}
-\newcommand{\version}{Version 2.0 from August 25, 2017.}
+\newcommand{\version}{Version 2.1 from July 26, 2019.}
 
 \newenvironment{infoblock}[1]
   {\par\addvspace{\medskipamount}
@@ -222,8 +226,8 @@ $ checkcites
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.0)
-Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.1)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 --------------------------------------------------------------------------
 I am sorry, but you have not provided any command line argument, including
@@ -258,8 +262,8 @@ $ checkcites --help
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.0)
-Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.1)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 Usage: checkcites.lua [ [ --all | --unused | --undefined ] [ --backend
 <arg> ] <file> [ <file 2> ... <file n> ] | --help | --version ]
@@ -318,8 +322,8 @@ $ checkcites document.aux
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.0)
-Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.1)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
 me check this file and extract the references. Please wait a moment.
@@ -459,8 +463,8 @@ $ checkcites --backend biber document.bcf
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.0)
-Copyright (c) 2012, 2017, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.1)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
 me check this file and extract the references. Please wait a moment.
