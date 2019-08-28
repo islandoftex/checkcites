@@ -1,79 +1,126 @@
-# checkcites.lua
+# `checkcites.lua`
 
-> **Current stable version:** 1.0i from December 18, 2012
-
-## The script
-
-`checkcites.lua` is a humble Lua script written for the sole purpose of detecting unused or undefined references from LaTeX auxiliary (`.aux`) or bibliography (`.bib`) files.
-
-The idea came from [this answer of mine](http://tex.stackexchange.com/a/43288/3094) in the [TeX.sx](http://tex.stackexchange.com/) community. My good friend [Enrico Gregorio](http://tex.stackexchange.com/users/4427/egreg) encouraged me and gave me great ideas to write this script, so we came up with `checkcites.lua`!
-
-## How it works
-
-First of all, we analyze the `.aux` file and extract both citations and bibliography. Let's call the citations set `A`.
-
-Now, we extract all entries from the bibliography files we found referenced in the previous step. Let's call the bibliography entries set `B`.
-
-Now we have both sets, let's do the math! If we want to get all undefined references in our `.tex` file, we simply go with:
-
-![Undefined references](http://latex.codecogs.com/png.latex?%5CLARGE%20A%20-%20B%20%3D%20%5C%7B%20x%20%3A%20x%20%5Cin%20A%2C%20x%20%5Cnotin%20B%20%5C%7D)
-
-For unused references in our `.bib` file(s), we go with:
-
-![Unused references](http://latex.codecogs.com/png.latex?%5CLARGE%20B%20-%20A%20%3D%20%5C%7B%20x%20%3A%20x%20%5Cin%20B%2C%20x%20%5Cnotin%20A%20%5C%7D)
-
-## Usage
-
-The script is pretty simple to use. The only requirement is a recent TeX distribution, such as [TeX Live](http://www.tug.org/texlive/). Then run `checkcites.lua`:
-
-    $ texlua checkcites.lua
-
-It will print the script usage. The only required argument is the `.aux` file which is generated when you compile your `.tex` file. If your main document is named `foo.tex`, you will have a `foo.aux` file too. To run the script on that file, go with
-
-    $ texlua checkcites.lua foo.aux
-
-`checkcites.lua` allows an additional argument that will tell it how to behave. For example
-
-    $ texlua checkcites.lua --unused foo.aux
-
-will make the script only look for unused references in your `.bib` file. The argument order doesn't matter, you can also run
-
-    $ texlua checkcites.lua foo.aux --unused
-
-and get the same behaviour. Similarly, you can use
-
-    $ texlua checkcites.lua --undefined foo.aux
-
-to make the script only look for undefined references in your `.tex` file. If you want `checkcites.lua` to look for both unused and undefined references, go with
-
-    $ texlua checkcites.lua --all foo.aux
-
-If no special argument is provided, `--all` is set as default.
 
 ## License
 
-This script is licensed under the [LaTeX Project Public License](http://www.latex-project.org/lppl/). If you want to support LaTeX development by a donation, the best way to do this is donating to the [TeX Users Group](http://www.tug.org/).
+This script is licensed under the LaTeX Project Public License.
+If you want to support LaTeX development by a donation, the best
+way to do this is donating to the TeX Users Group.
 
-## The authors
+## About
 
-You can reach us through the following links:
+`checkcites` is a Lua script written for the sole purpose of detecting
+unused or undefined references from both LaTeX auxiliary or bibliography
+files. We use the term *unused reference* to refer to the reference
+present the bibliography file - with the `.bib` extension - but not
+cited in the `.tex` file. The term *undefined reference* is exactly the
+opposite, i.e, the item cited in the `.tex` file, but not present in the
+`.bib` file.
 
-+ [Enrico Gregorio](http://profs.scienze.univr.it/~gregorio/)
-+ [Paulo Roberto Massa Cereda](http://cereda.users.sourceforge.net/)
+The original idea came from a question posted in the TeX community at
+Stack Exchange about how to check which bibliography entries were not
+used. We decided to write a script to check references. We opted for
+Lua, since it's a very straightforward language and it has an
+interpreter available on every modern TeX distribution.
 
-You can also find us in the [TeX, LaTeX and Friends](http://chat.stackexchange.com/rooms/41/tex-latex-and-friends) chatroom of the [TeX.sx](http://tex.stackexchange.com/) community.
+# Usage
 
-## Changelog
+The script is pretty simple to use. The only requirement is a recent
+TeX distribution, such as TeX Live.
 
-### 1.0i
+`checkcites` uses the generated auxiliary files to start the analysis.
+From version 2.0 on, the scripts supports two backends:
 
-Fixed [issue #1](https://github.com/cereda/checkcites/pull/1): bibliography entries with leading whitespace before the `cite` key were causing problems because the whitespace was being extracted alongside the key. The patch was kindly provided by Constantine Lignos.
+## `bibtex`
 
-### 1.0h
+Default behavior, the script checks `.aux` files looking for citations,
+in the form of `\citation{a}`. For every `\citation` line found, `checkcites`
+will extract the citations and add them to a table, even for multiple
+citations separated by commas, like `\citation{a,b,c}`. The citation
+table contains no duplicate values. At the same time checkcites also
+looks for bibliography data, in the form of `\bibdata{a}`. Similarly,
+for every `\bibdata` line found, the script will extract the bibliography
+data and add them to a table, even if they are separated by commas, like
+`\bibdata{d,e,f}`. Again, no duplicate values are allowed. Stick with this
+backend if you are using BibTeX or BibLaTeX with the `backend=bibtex`
+package option.
 
-If `\citation{*}` is found, `checkcites` will issue a message telling that `\nocite{*}` is in the `.tex` document, but the script will do the check nonetheless.
+## `biber`
 
-### 1.0g
+With this backend, the script checks `.bcf files` (which are XML-based)
+looking for citations, in the form of `bcf:citekey` tags. For every tag
+found, `checkcites` will extract the corresponding values and add them to
+a table. The citation table contains no duplicate values. At the same
+time `checkcites` also looks for bibliography data, in the form of
+`bcf:datasource` tags. Similarly, for every tag found, the script will
+extract the bibliography data and add them to a table. Again, no duplicate
+values are allowed. Stick with this backend if you are using BibLaTeX with
+the default options or with the `backend=biber` option explicitly set.
 
-First public release. Yay!
+## Command line
 
+Open a terminal and run `checkcites`:
+
+```bash
+$ checkcites
+```
+
+When you run `checkcites` without providing any argument to it, the a message
+error will appear. Do not panic! Try again with the `--help` flag:
+
+```bash
+$ checkcites --help
+```
+
+If you are using BibTeX, simply provide the auxiliary file - the one with
+the `.aux` extension - which is generated when you compile your main `.tex`
+file. For example, if your main document is named `foo.tex`, you probably
+have a `foo.aux` file too. Then simply invoke
+
+```bash
+$ checkcites foo.aux
+```
+
+`checkcites` allows an additional argument that will tell it how to
+behave. For example
+
+```bash
+$ checkcites --unused foo.aux
+```
+
+will make the script only look for unused references in your `.bib`
+file. The argument order doesn't matter, you can also run
+
+```bash
+$ checkcites foo.aux --unused
+```
+
+and get the same behaviour. Similarly, you can use
+
+```bash
+$ checkcites --undefined foo.aux
+```
+
+to make the script only look for undefined references in your
+`.tex` file. If you want `checkcites` to look for both unused and
+undefined references, go with
+
+```bash
+$ checkcites --all foo.aux
+```
+
+If no special argument is provided, `--all` is set as default.
+
+If you are using BibLaTeX, we need to inspect `.bcf` files instead. For
+example, if your main document is named `foo.tex`, you probably have a
+`foo.bcf` file too. Then invoke
+
+```bash
+$ checkcites foo.aux --backend biber
+```
+
+Note the `--backend` flag used for BibLaTeX support. We can even omit the
+file extension, the script will automatically assign one based on the
+current backend.
+
+That is it, folks!
