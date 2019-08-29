@@ -1,3 +1,4 @@
+#!/usr/bin/env texlua
 -- -----------------------------------------------------------------
 -- checkcites.lua
 -- Copyright 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
