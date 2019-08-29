@@ -1,4 +1,3 @@
-#!/usr/bin/env texlua
 -- -----------------------------------------------------------------
 -- checkcites.lua
 -- Copyright 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
@@ -211,6 +210,36 @@ local function extract(lines)
   return result
 end
 
+-- Extracts the cross-references found
+-- in lines of the bibligraphy file.
+-- @param lines Line of a file.
+-- @return Table containing cross-references.
+local function crossref(lines)
+  local result, lookup, key, hit = {}, ''
+  for _, line in ipairs(lines) do
+     key, hit = string.match(line,
+                '^%s*%@(%w+%s*){%s*(.+),')
+    if key and allowed(key) then
+      lookup = normalize(hit)
+    else
+      key, hit = string.match(line,
+                 '^%s*(%w+)%s*=%s*(.+)$')
+      if key then
+        key = string.lower(key)
+        if key == 'crossref' then
+          if string.sub(hit, -1) == ',' then
+            hit = string.sub(hit, 2, -3)
+          else
+            hit = string.sub(hit, 2, -2)
+          end
+          result[lookup] = hit
+        end
+      end
+    end
+  end
+  return result
+end
+
 -- Adds the extension if the file does not have it.
 -- @param file File.
 -- @param extension Extension.
@@ -411,6 +440,21 @@ local function flatten(t)
   return result
 end
 
+-- Organizes a key/value table of tables into only one table.
+-- @param t Table.
+-- @return Flattened key/value table.
+local function organize(t)
+  local result = {}
+  for _, v in ipairs(t) do
+    for j, k in pairs(v) do
+      if not result[j] then
+        result[j] = k
+      end
+    end
+  end
+  return result
+end
+
 -- Applies a function to elements of a table.
 -- @param c Table.
 -- @param f Function.
@@ -453,7 +497,7 @@ local operations = {}
 -- @param citations Citations.
 -- @param references References.
 -- @return Integer representing the status.
-operations.unused = function(citations, references)
+operations.unused = function(citations, references, crossrefs)
   print()
   print(pad('-', 74))
   print(wrap('Report of unused references in your TeX ' ..
@@ -461,6 +505,20 @@ operations.unused = function(citations, references)
              'bibliography files, but not cited in ' ..
              'the TeX source file)', 74))
   print(pad('-', 74))
+
+  local z = {}
+  for _, citation in ipairs(citations) do
+    if crossrefs[citation] then
+      table.insert(z, crossrefs[citation])
+    end
+  end
+
+  for _, i in ipairs(z) do
+    if not exists(i, citations) then
+      table.insert(citations, i)
+    end
+  end
+
   local r = difference(references, citations)
   print()
   print(wrap('Unused references in your TeX document: ' ..
@@ -479,7 +537,7 @@ end
 -- @param citations Citations.
 -- @param references References.
 -- @return Integer value indicating the status.
-operations.undefined = function(citations, references)
+operations.undefined = function(citations, references, crossrefs)
   print()
   print(pad('-', 74))
   print(wrap('Report of undefined references in your TeX ' ..
@@ -487,6 +545,20 @@ operations.undefined = function(citations, references)
              'TeX source file, but not present in the ' ..
              'bibliography files)', 74))
   print(pad('-', 74))
+
+  local z = {}
+  for _, citation in ipairs(citations) do
+    if crossrefs[citation] then
+      table.insert(z, crossrefs[citation])
+    end
+  end
+
+  for _, i in ipairs(z) do
+    if not exists(i, citations) then
+      table.insert(citations, i)
+    end
+  end
+
   local r = difference(citations, references)
   print()
   print(wrap('Undefined references in your TeX document: ' ..
@@ -505,10 +577,10 @@ end
 -- @param citations Citations.
 -- @param references References.
 -- @return Integer value indicating the status.
-operations.all = function(citations, references)
+operations.all = function(citations, references, crossrefs)
   local x, y
-  x = operations.unused(citations, references)
-  y = operations.undefined(citations, references)
+  x = operations.unused(citations, references, crossrefs)
+  y = operations.undefined(citations, references, crossrefs)
   if x + y > 0 then
     return 1
   else
@@ -596,8 +668,8 @@ local function checkcites(args)
   if keys['version'] or keys['help'] then
     if keys['version'] then
       print()
-      print(wrap('checkcites.lua, version 2.1 (dated July ' ..
-                 '26, 2019)', 74))
+      print(wrap('checkcites.lua, version 2.2 (dated August ' ..
+                 '29, 2019)', 74))
 
       print(pad('-', 74))
       print(wrap('You can find more details about this ' ..
@@ -773,6 +845,9 @@ local function checkcites(args)
   local references = flatten(apply(bibliography, function(a)
                      return extract(read(a)) end))
 
+  local crossrefs = organize(apply(bibliography, function(a)
+                    return crossref(read(a)) end))
+
   print()
   print(wrap('Fantastic, I found ' .. tostring(#references) ..
              ' ' .. plural(#references, 'reference',
@@ -782,7 +857,7 @@ local function checkcites(args)
              plural(((check == 'all' and 2) or 1), 'report is',
              'reports are') .. ' generated.', 74))
 
-  return operations[check](citations, references)
+  return operations[check](citations, references, crossrefs)
 end
 
 -- Call and exit
