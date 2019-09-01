@@ -628,6 +628,7 @@ local function checkcites(args)
     { short = 'U', long = 'undefined', argument = false },
     { short = 'v', long = 'version', argument = false },
     { short = 'h', long = 'help', argument = false },
+    { short = 'c', long = 'crossrefs', argument = false },
     { short = 'b', long = 'backend', argument = true }
   }
 
@@ -696,6 +697,7 @@ local function checkcites(args)
       print('-a,--all           list all unused and undefined references')
       print('-u,--unused        list only unused references in your bibliography files')
       print('-U,--undefined     list only undefined references in your TeX source file')
+      print('-c,--crossrefs     enable cross-reference checks (disabled by default)')
       print('-b,--backend <arg> set the backend-based file lookup policy')
       print('-h,--help          print the help message')
       print('-v,--version       print the script version')
@@ -846,8 +848,8 @@ local function checkcites(args)
   local references = flatten(apply(bibliography, function(a)
                      return extract(read(a)) end))
 
-  local crossrefs = organize(apply(bibliography, function(a)
-                    return crossref(read(a)) end))
+  local crossrefs = (keys['crossrefs'] and organize(apply(bibliography,
+                    function(a) return crossref(read(a)) end))) or {}
 
   print()
   print(wrap('Fantastic, I found ' .. tostring(#references) ..
