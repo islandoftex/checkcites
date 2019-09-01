@@ -20,7 +20,7 @@
 
 \newcommand{\checkcites}{\texttt{checkcites}}
 \newcommand{\email}[1]{\small\texttt{#1}}
-\newcommand{\version}{Version 2.2 from August 29, 2019.}
+\newcommand{\version}{Version 2.3 from September 1, 2019.}
 
 \newenvironment{infoblock}[1]
   {\par\addvspace{\medskipamount}
@@ -66,9 +66,10 @@ straightforward language and it has an interpreter available on every
 modern \TeX\ distribution.
 
 \begin{infoblock}{Attention!}
-\checkcites\ is known  to run with the most  recent \verb|texlua| and
-\verb|lua| interpreters. Unfortunately, the code is incompatible with
-interpreters prior to the Lua 5.1 language specification.
+From version 2.1 on, \checkcites\ relies on specific libraries available
+in the \verb|texlua| ecosystem and thus is not be supported in vanilla
+\verb|lua| interpreters. Please make sure to use this script with an
+updated \verb|texlua| interpreter in order to ensure the correct behaviour.
 \end{infoblock}
 
 \section{How the script works}
@@ -226,7 +227,7 @@ $ checkcites
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.1)
+checkcites.lua -- a reference checker script (v2.3)
 Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 --------------------------------------------------------------------------
@@ -271,6 +272,7 @@ Usage: checkcites.lua [ [ --all | --unused | --undefined ] [ --backend
 -a,--all           list all unused and undefined references
 -u,--unused        list only unused references in your bibliography files
 -U,--undefined     list only undefined references in your TeX source file
+-c,--crossrefs     enable cross-reference checks (disabled by default)
 -b,--backend <arg> set the backend-based file lookup policy
 -h,--help          print the help message
 -v,--version       print the script version
@@ -322,7 +324,7 @@ $ checkcites document.aux
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.1)
+checkcites.lua -- a reference checker script (v2.3)
 Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
@@ -463,7 +465,7 @@ $ checkcites --backend biber document.bcf
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.1)
+checkcites.lua -- a reference checker script (v2.3)
 Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
@@ -491,7 +493,18 @@ Undefined references in your TeX document: 1
 \end{verbatim}
 \end{terminal}
 
-That is all, folks!
+If you rely on cross-references in your bibliography file, \checkcites\ might complain about
+unused entries. We can try the experimental feature available from version 2.3 on that attempts
+to check cross-references through the \verb|--crossrefs| command line flag:
+
+\begin{terminal}
+\begin{verbatim}
+$ checkcites --crossrefs document.aux
+\end{verbatim}
+\end{terminal}
+
+This feature is disabled by default and it is known to work with both \verb|bibtex| and \verb|biber|
+backends. Please report if you find an issue. That is all, folks!
 
 \section{License}
 \label{sec:license}
@@ -501,9 +514,5 @@ This        script        is         licensed        under        the
 License}.  If  you   want  to  support  \LaTeX{}   development  by  a
 donation,   the  best   way   to   do  this   is   donating  to   the
 \href{http://www.tug.org/}{TeX Users Group}.
-
-\begin{infoblock}{Official code repository}
-\url{http://github.com/cereda/checkcites}
-\end{infoblock}
 
 \end{document}

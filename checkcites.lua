@@ -670,8 +670,8 @@ local function checkcites(args)
   if keys['version'] or keys['help'] then
     if keys['version'] then
       print()
-      print(wrap('checkcites.lua, version 2.2 (dated August ' ..
-                 '29, 2019)', 74))
+      print(wrap('checkcites.lua, version 2.3 (dated September ' ..
+                 '1, 2019)', 74))
 
       print(pad('-', 74))
       print(wrap('You can find more details about this ' ..
