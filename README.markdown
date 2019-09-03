@@ -47,7 +47,7 @@ package option.
 
 ## `biber`
 
-With this backend, the script checks `.bcf files` (which are XML-based)
+With this backend, the script checks `.bcf` files (which are XML-based)
 looking for citations, in the form of `bcf:citekey` tags. For every tag
 found, `checkcites` will extract the corresponding values and add them to
 a table. The citation table contains no duplicate values. At the same
