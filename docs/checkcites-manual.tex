@@ -1,0 +1,37 @@
+% arara: lualatex
+% arara: lualatex
+% arara: clean: { extensions: [ aux, log, gz ] }
+\documentclass[12pt,article,a4paper,oneside]{memoir}
+
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\setmonofont{DejaVu Sans Mono}
+
+\setlrmarginsandblock{2.5cm}{2.5cm}{*}
+\setulmarginsandblock{2.5cm}{*}{1}
+\checkandfixthelayout 
+
+\usepackage[english]{babel}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{fancyvrb}
+\usepackage{booktabs}
+
+\newcommand{\checkcites}{\texttt{checkcites}}
+
+\newcommand{\checkcitesversion}{%
+  \InputIfFileExists{version.tex}{}{undefined}}
+
+\title{\checkcites}
+\author{Island of \TeX}
+\date{Version \checkcitesversion\ -- \today}
+
+\begin{document}
+
+\maketitle
+
+\checkcites\ is brought to you by the Island of \TeX. If you want to support
+\TeX\ development by a donation, the best way to do this is donating to the
+\TeX\ Users Group.
+
+\end{document}
