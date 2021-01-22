@@ -5,6 +5,6 @@ import java.io.File
 
 fun main(args: Array<String>) {
     println("Hello checkcites")
-    val extractor = Extractor(Mode.BIBTEX)
-    extractor.extract(listOf(File("/home/paulo/Testes/test.aux")))
+    val extractor = Extractor(Mode.BibTeX())
+    extractor.extract(listOf(File("test.aux")))
 }
