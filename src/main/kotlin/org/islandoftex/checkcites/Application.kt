@@ -5,6 +5,7 @@ import java.io.File
 
 fun main(args: Array<String>) {
     println("Hello checkcites")
-    val extractor = Extractor(Mode.BibTeX())
-    extractor.extract(listOf(File("test.aux")))
+
+    val extractor = Extractor(Mode.Biber(), LookupResolution(emptyList(), true))
+    extractor.extract(listOf(File("test.bcf")))
 }
