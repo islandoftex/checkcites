@@ -1,7 +1,12 @@
+// SPDX-License-Identifier: BSD-3-Clause
 package org.islandoftex.checkcites
 
-import java.io.File
-import java.nio.file.Paths
+import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.Path
+import kotlin.io.path.div
+import kotlin.io.path.readLines
 
 sealed class Mode(val keyRegex: Regex, val bibRegex: Regex) {
     class Biber : Mode(
@@ -15,12 +20,13 @@ sealed class Mode(val keyRegex: Regex, val bibRegex: Regex) {
     )
 }
 
-data class CitationData(val citations: Set<String>, val bibliographies: Set<File>)
-data class LookupResolution(val searchPaths: List<File>, val searchTree: Boolean)
+data class CitationData(val citations: Set<String>, val bibliographies: Set<Path>)
+data class LookupResolution(val searchPaths: List<Path>, val searchTree: Boolean)
 
 class Extractor(private val mode: Mode, private val resolution: LookupResolution) {
 
-    fun extract(files: List<File>) {
+    @ExperimentalPathApi
+    fun extract(files: List<Path>) {
 
         val dataMap = files.map {
             val text = it.readLines().joinToString()
@@ -31,17 +37,15 @@ class Extractor(private val mode: Mode, private val resolution: LookupResolution
                 }.flatten().toSet(),
                 mode.bibRegex.findAll(text).map { result ->
                     result.groupValues[1].split(",")
-                        .map { s -> if (s.trim().endsWith(".bib")) s.trim() else "${s.trim()}.bib" }.map { s ->
-                            listOf(File("."), *resolution.searchPaths.toTypedArray()).map { r ->
-                                Paths.get(
-                                    r.absolutePath,
-                                    s
-                                ).toFile()
-                            }.firstOrNull { r -> r.exists() } ?: run {
+                        .map { s -> s.trim().takeIf { t -> t.endsWith(".bib") } ?: "${s.trim()}.bib" }.map { s ->
+                            listOf(Path(".")).plus(resolution.searchPaths).map { r ->
+                                r / s
+                            }
+                                .firstOrNull { r -> Files.exists(r) } ?: run {
                                 if (resolution.searchTree) {
                                     val hit = Kpsewhich.getHitFor(s)
                                     if (hit.isNotBlank()) {
-                                        File(hit)
+                                        Path(hit)
                                     } else {
                                         // TODO throw exception
                                         throw Exception("bib not found: $s")
@@ -58,5 +62,4 @@ class Extractor(private val mode: Mode, private val resolution: LookupResolution
 
         println(dataMap)
     }
-
 }
