@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
 package org.islandoftex.checkcites
 
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 import kotlin.io.path.div
+import kotlin.io.path.exists
 import kotlin.io.path.readLines
 
 sealed class Mode(val keyRegex: Regex, val bibRegex: Regex) {
@@ -41,20 +41,14 @@ class Extractor(private val mode: Mode, private val resolution: LookupResolution
                             listOf(Path(".")).plus(resolution.searchPaths).map { r ->
                                 r / s
                             }
-                                .firstOrNull { r -> Files.exists(r) } ?: run {
-                                if (resolution.searchTree) {
-                                    val hit = Kpsewhich.getHitFor(s)
-                                    if (hit.isNotBlank()) {
-                                        Path(hit)
-                                    } else {
-                                        // TODO throw exception
-                                        throw Exception("bib not found: $s")
-                                    }
-                                } else {
-                                    // TODO throw exception
-                                    throw Exception("bib not found: $s")
-                                }
-                            }
+                                .firstOrNull { r -> r.exists() }
+                                ?: Kpsewhich.takeIf { resolution.searchTree }
+                                    ?.getHitFor(s)
+                                    ?.takeIf { r -> r.isNotBlank() }
+                                    ?.let { r -> Path(r) }
+                                ?: throw Exception(
+                                    "Bibliography not found: $s"
+                                )
                         }
                 }.flatten().toSet()
             )
