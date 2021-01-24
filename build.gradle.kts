@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk7"))
 }
 
 java {
@@ -79,7 +80,8 @@ spotless {
         endWithNewline()
     }
     kotlin {
-        target("buildSrc/src/**/*.kt")
+        target("buildSrc/src/**/*.kt",
+               "src/**/*.kt")
         ktlint()
         licenseHeader("// SPDX-License-Identifier: BSD-3-Clause")
         trimTrailingWhitespace()
@@ -102,7 +104,18 @@ val appManifest: Manifest by extra(DefaultManifest(
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn," +
+                    "kotlin.io.path.ExperimentalPathApi")
+        }
+    }
+    named<JavaExec>("run") {
+        if (JavaVersion.current() > JavaVersion.VERSION_1_8) {
+            doFirst {
+                jvmArgs = listOf("--module-path", classpath.asPath)
+            }
+        }
     }
     named<Jar>("jar") {
         manifest.attributes.putAll(appManifest.attributes)
