@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: BSD-3-Clause
 package org.islandoftex.checkcites
 
 import java.nio.file.Path
@@ -38,5 +39,4 @@ class Bibliography {
             }.distinctBy { p -> p.key }.toSet()
         }.toMap()
     }
-
 }
