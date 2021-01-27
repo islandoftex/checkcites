@@ -2,11 +2,7 @@
 package org.islandoftex.checkcites
 
 import java.nio.file.Path
-import kotlin.io.path.ExperimentalPathApi
-import kotlin.io.path.Path
-import kotlin.io.path.div
-import kotlin.io.path.exists
-import kotlin.io.path.readLines
+import kotlin.io.path.*
 
 sealed class Mode(val keyRegex: Regex, val bibRegex: Regex) {
     class Biber : Mode(
@@ -26,9 +22,9 @@ data class LookupResolution(val searchPaths: List<Path>, val searchTree: Boolean
 class Extractor(private val mode: Mode, private val resolution: LookupResolution) {
 
     @ExperimentalPathApi
-    fun extract(files: List<Path>) {
+    fun extract(files: List<Path>): Map<Path, CitationData> {
 
-        val dataMap = files.map {
+        return files.map {
             val text = it.readLines().joinToString()
 
             it to CitationData(
@@ -53,7 +49,5 @@ class Extractor(private val mode: Mode, private val resolution: LookupResolution
                 }.flatten().toSet()
             )
         }.toMap()
-
-        println(dataMap)
     }
 }
