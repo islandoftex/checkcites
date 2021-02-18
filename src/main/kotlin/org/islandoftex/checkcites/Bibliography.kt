@@ -4,10 +4,31 @@ package org.islandoftex.checkcites
 import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.readLines
+import kotlin.io.path.readText
 
 data class BibliographyData(val type: String, val key: String, val crossrefs: Set<String>)
 
 class Bibliography {
+
+    @ExperimentalPathApi
+    fun extract(
+        files: List<Path>,
+        ignoreTypes: Set<String>,
+        ignoreKeys: Set<String>
+    ): Map<Path, Set<BibliographyData>> {
+
+        return files.map {
+            val text = it.readText()
+
+            it to BibTeXParser().parseText(text).filter { e ->
+                if (e.key != null) !(ignoreKeys.contains(e.key) || ignoreTypes.contains(e.type)) else false
+            }.map { e ->
+                BibliographyData(e.type, e.key!!, e.fields["crossref"]?.removeSurrounding("\"")
+                    ?.removeSurrounding("{", "}")?.split(",")?.map { s -> s.trim() }?.toSet()
+                    ?: setOf())
+            }.toSet()
+        }.toMap()
+    }
 
     @ExperimentalPathApi
     fun extract(files: List<Path>): Map<Path, Set<BibliographyData>> {
