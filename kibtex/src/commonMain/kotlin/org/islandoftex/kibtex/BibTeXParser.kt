@@ -14,24 +14,25 @@ public enum class TextElement {
 
 public class BibTeXParser {
     public fun parseText(text: String): List<BibliographyEntry> {
-        return extractBlocks(text).map {
-            when (it.first) {
-                "comment" -> parseLiteral(it.first, it.second.trim())
-                "preamble" -> parseString(it.first, it.second.trim())
-                "string" -> parseString(it.first, it.second.trim())
-                else -> parseEntry(it.first, it.second.trim())
+        return extractBlocks(text)
+            .map { it.first.trim() to it.second.trim() }
+            .map {
+                when (it.first) {
+                    "comment" -> parseLiteral(it.first, it.second)
+                    "preamble" -> parseString(it.first, it.second)
+                    "string" -> parseString(it.first, it.second)
+                    else -> parseEntry(it.first, it.second)
+                }
             }
-        }.toList()
     }
 
     private fun extractBlocks(text: String): List<Pair<String, String>> {
         val entries = "@([a-zA-Z]+)\\s*([\\{\\(])".toRegex().findAll(text)
 
-        val blocks = entries.map {
-
+        val blocks = entries.mapNotNull {
             var (bracketCounter, parenthesisCounter) = when (it.groupValues[2]) {
-                "{" -> Pair(1, 0)
-                else -> Pair(0, 1)
+                "{" -> 1 to 0
+                else -> 0 to 1
             }
 
             var limit = -1
@@ -51,22 +52,18 @@ public class BibTeXParser {
                 }
             }
 
-            limit = if (!setOf(
-                    "string",
-                    "preamble"
-                ).contains(it.groupValues[1].toLowerCase()) && it.groupValues[2] == "("
-            ) -1 else limit
-
-            Triple(it.groupValues[1].toLowerCase(), it.range.last + 1, limit)
-        }.filter { it.third != -1 }.toList()
+            limit.takeUnless { _ ->
+                !setOf("string", "preamble").contains(it.groupValues[1].toLowerCase()) &&
+                        it.groupValues[2] == "("
+            }?.let { _ ->
+                Triple(it.groupValues[1].toLowerCase(), it.range.last + 1, limit)
+            }
+        }.toList()
 
         return blocks.filterIndexed { index, triple ->
-            if (index == 0) true else blocks[index - 1].third < triple.third
+            index == 0 || blocks[index - 1].third < triple.third
         }.map {
-            Pair(
-                it.first,
-                text.substring(it.second, it.third)
-            )
+            it.first to text.substring(it.second, it.third)
         }
     }
 
@@ -74,10 +71,14 @@ public class BibTeXParser {
         BibliographyEntry(type, null, mapOf("content" to text))
 
     private fun parseString(type: String, text: String): BibliographyEntry {
-        val map = "^\\s*([a-zA-Z][a-zA-Z0-9_-]+)\\s*=\\s*".toRegex(RegexOption.MULTILINE).find(text)?.let {
-            val (value, _) = extractLine(text.substring(it.range.last).trim())
-            mapOf(it.groupValues[1] to value.joinToString(" "))
-        } ?: mapOf()
+        val map = "^\\s*([a-zA-Z][a-zA-Z0-9_-]+)\\s*=\\s*"
+            .toRegex(RegexOption.MULTILINE)
+            .find(text)
+            ?.let {
+                val (value, _) = extractLine(text.substring(it.range.last).trim())
+                mapOf(it.groupValues[1] to value.joinToString(" "))
+            }
+            ?: mapOf()
 
         return BibliographyEntry(type, null, map)
     }
@@ -93,11 +94,9 @@ public class BibTeXParser {
         }
 
         while (!range.isEmpty()) {
-
             val pair = findKey(text, range.first)
 
             if (!pair.second.isEmpty()) {
-
                 range = IntRange(pair.second.last, text.length - 1)
                 val value = extractLine(text.substring(range).trim())
 
@@ -115,10 +114,13 @@ public class BibTeXParser {
     }
 
     private fun findKey(text: String, start: Int): Pair<String, IntRange> {
-        return ",.*?\\s*([a-zA-Z]\\w+)\\s*=\\s*".toRegex().find(text, start)?.let {
-            Pair(it.groupValues[1], it.range)
-        }
-            ?: Pair("", IntRange.EMPTY)
+        return ",.*?\\s*([a-zA-Z]\\w+)\\s*=\\s*"
+            .toRegex()
+            .find(text, start)
+            ?.let {
+                it.groupValues[1] to it.range
+            }
+            ?: ("" to IntRange.EMPTY)
     }
 
     private fun extractLine(text: String): Pair<List<String>, Int> {
@@ -173,7 +175,8 @@ public class BibTeXParser {
     }
 
     private fun getQuoteText(text: String, start: Int, element: TextElement): IntRange {
-        if (!setOf(TextElement.EMPTY, TextElement.CONCAT).contains(element)) return IntRange.EMPTY
+        if (!setOf(TextElement.EMPTY, TextElement.CONCAT).contains(element))
+            return IntRange.EMPTY
 
         var bracketCounter = 0
         var stop = false
