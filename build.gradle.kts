@@ -3,7 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 plugins {
     val versions = org.islandoftex.checkcites.build.Versions
     kotlin("jvm") version versions.kotlin
-    id("com.github.ben-manes.versions") version versions.versions
+    id("com.github.ben-manes.versions") version versions.versionsPlugin
     id("com.diffplug.spotless") version versions.spotless
     id("com.diffplug.spotless-changelog") version versions.changelog
     id("io.gitlab.arturbosch.detekt") version versions.detekt

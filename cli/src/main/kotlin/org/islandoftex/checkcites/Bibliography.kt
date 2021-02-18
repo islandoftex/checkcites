@@ -5,6 +5,7 @@ import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.readLines
 import kotlin.io.path.readText
+import org.islandoftex.kibtex.BibTeXParser
 
 data class BibliographyData(val type: String, val key: String, val crossrefs: Set<String>)
 
@@ -32,7 +33,6 @@ class Bibliography {
 
     @ExperimentalPathApi
     fun extract(files: List<Path>): Map<Path, Set<BibliographyData>> {
-
         return files.map {
             val text = it.readLines().joinToString(" ")
 

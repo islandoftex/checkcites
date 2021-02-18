@@ -8,5 +8,5 @@ object Versions {
     const val kotlin = "1.4.30"
     const val shadow = "6.1.0"
     const val spotless = "5.10.2"
-    const val versions = "0.36.0"
+    const val versionsPlugin = "0.36.0"
 }

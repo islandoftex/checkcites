@@ -20,7 +20,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk7"))
-    project(":kibtex")
+    implementation(project(":kibtex"))
 }
 
 java {

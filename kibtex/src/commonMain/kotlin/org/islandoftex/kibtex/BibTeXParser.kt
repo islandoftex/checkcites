@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
-package org.islandoftex.checkcites
+package org.islandoftex.kibtex
 
-data class BibliographyEntry(val type: String, val key: String? = null, val fields: Map<String, String>)
+public data class BibliographyEntry(val type: String, val key: String? = null, val fields: Map<String, String>)
 
-enum class TextElement {
+public enum class TextElement {
     BRACKET,
     QUOTE,
     VARIABLE,
@@ -12,9 +12,8 @@ enum class TextElement {
     EMPTY
 }
 
-class BibTeXParser {
-
-    fun parseText(text: String): List<BibliographyEntry> {
+public class BibTeXParser {
+    public fun parseText(text: String): List<BibliographyEntry> {
         return extractBlocks(text).map {
             when (it.first) {
                 "comment" -> parseLiteral(it.first, it.second.trim())
@@ -36,7 +35,7 @@ class BibTeXParser {
             }
 
             var limit = -1
-            for (i in (it.range.last + 1)..text.length - 1) {
+            for (i in (it.range.last + 1) until text.length) {
                 when (text[i]) {
                     '{' -> bracketCounter++
                     '}' -> bracketCounter--
@@ -75,7 +74,6 @@ class BibTeXParser {
         BibliographyEntry(type, null, mapOf("content" to text))
 
     private fun parseString(type: String, text: String): BibliographyEntry {
-
         val map = "^\\s*([a-zA-Z][a-zA-Z0-9_-]+)\\s*=\\s*".toRegex(RegexOption.MULTILINE).find(text)?.let {
             val (value, _) = extractLine(text.substring(it.range.last).trim())
             mapOf(it.groupValues[1] to value.joinToString(" "))
@@ -85,10 +83,9 @@ class BibTeXParser {
     }
 
     private fun parseEntry(type: String, text: String): BibliographyEntry {
-
         var key: String? = null
         var range = IntRange.EMPTY
-        var fields = mutableMapOf<String, String>()
+        val fields = mutableMapOf<String, String>()
 
         "^\\s*([^ ,{}()\\[\\]]*)\\s*,".toRegex().find(text)?.let {
             range = IntRange(it.range.last, text.length - 1)
@@ -104,8 +101,8 @@ class BibTeXParser {
                 range = IntRange(pair.second.last, text.length - 1)
                 val value = extractLine(text.substring(range).trim())
 
-                if (value.first.isNotEmpty()) {
-                    fields.putIfAbsent(pair.first, value.first.joinToString(" "))
+                if (value.first.isNotEmpty() && pair.first !in fields) {
+                    fields[pair.first] = value.first.joinToString(" ")
                 }
 
                 range = IntRange(value.second + pair.second.last, text.length - 1)
@@ -127,10 +124,10 @@ class BibTeXParser {
     private fun extractLine(text: String): Pair<List<String>, Int> {
         var range = IntRange(0, text.length - 1)
         var element = TextElement.EMPTY
-        var result = mutableListOf<String>()
+        val result = mutableListOf<String>()
         var limit = 0
-        while (!range.isEmpty()) {
 
+        while (!range.isEmpty()) {
             val pair = when (text[range.first]) {
                 '{' -> Pair(getBracketText(text, range.first, element), TextElement.BRACKET)
                 '"' -> Pair(getQuoteText(text, range.first, element), TextElement.QUOTE)
@@ -151,7 +148,6 @@ class BibTeXParser {
     }
 
     private fun getBracketText(text: String, start: Int, element: TextElement): IntRange {
-
         if (!setOf(TextElement.EMPTY, TextElement.CONCAT).contains(element)) return IntRange.EMPTY
 
         var bracketCounter = 0
@@ -177,7 +173,6 @@ class BibTeXParser {
     }
 
     private fun getQuoteText(text: String, start: Int, element: TextElement): IntRange {
-
         if (!setOf(TextElement.EMPTY, TextElement.CONCAT).contains(element)) return IntRange.EMPTY
 
         var bracketCounter = 0
@@ -201,7 +196,6 @@ class BibTeXParser {
     }
 
     private fun getComplement(text: String, start: Int, element: TextElement): Pair<IntRange, TextElement> {
-
         val slice = text.substring(start)
 
         val pair = "^(\\s+#\\s+[\\{\"\\da-zA-Z])".toRegex().find(slice)?.range?.let {
