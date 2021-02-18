@@ -86,7 +86,7 @@ open class CTANBuilderTask : DefaultTask() {
 
             logger.debug("Creating the archive file")
             TaskHelper.execute(temporaryDir, "zip", "-r", "${project.name}.zip",
-                    "${project.name}.tds.zip", "${project.name}")
+                    "${project.name}.tds.zip", project.name)
 
             logger.debug("Copying archive file to top level")
             temporaryDir.resolve("${project.name}.zip")

@@ -2,8 +2,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.java.archives.internal.DefaultManifest
-import org.islandoftex.checkcites.build.CTANBuilderTask
-import org.islandoftex.checkcites.build.TDSZipBuilderTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -82,9 +80,4 @@ tasks {
         archiveClassifier.set("")
     }
     named<Task>("assembleDist").configure { dependsOn("shadowJar") }
-
-    register<TDSZipBuilderTask>("assembleTDSZip")
-    register<CTANBuilderTask>("assembleCTAN") {
-        dependsOn(":assembleTDSZip")
-    }
 }

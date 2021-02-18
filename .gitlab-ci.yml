@@ -49,7 +49,7 @@ test:dependencyupdates:
   script:
     - apt-get update
     - apt-get install -y --no-install-recommends zip
-    - ./gradlew -Prelease=$PRELEASE :cli:assembleCTAN --info
+    - ./gradlew -Prelease=$PRELEASE assembleCTAN --info
     - cp build/*.zip ./
   artifacts:
     name: "$CI_COMMIT_REF_NAME-ctan"

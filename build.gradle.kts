@@ -1,4 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.islandoftex.checkcites.build.CTANBuilderTask
+import org.islandoftex.checkcites.build.TDSZipBuilderTask
 
 plugins {
     val versions = org.islandoftex.checkcites.build.Versions
@@ -74,6 +76,11 @@ tasks {
             }
         }
         checkForGradleUpdate = false
+    }
+
+    register<TDSZipBuilderTask>("assembleTDSZip")
+    register<CTANBuilderTask>("assembleCTAN") {
+        dependsOn("assembleTDSZip")
     }
 }
 

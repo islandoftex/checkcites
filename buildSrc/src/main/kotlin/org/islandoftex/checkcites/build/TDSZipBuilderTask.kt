@@ -11,7 +11,7 @@ open class TDSZipBuilderTask : DefaultTask() {
 
         inputs.files("docs", "src")
         outputs.files(project.buildDir.resolve(project.name + ".tds.zip"))
-        dependsOn(":docs:buildManual", ":shadowJar")
+        dependsOn(":docs:buildManual", ":cli:shadowJar")
     }
 
     /**
@@ -76,7 +76,7 @@ open class TDSZipBuilderTask : DefaultTask() {
 
         logger.debug("Copying the source code directory")
         project.copy {
-            from(project.rootDir.resolve("src"))
+            from(project.rootDir.resolve("cli/src"))
             into(temporaryDir.resolve("source/support/${project.name}"))
             exclude("build")
         }
