@@ -7,38 +7,15 @@ stages:
   - test
   - publish
 
-.buildtemplate: &builddefinition
-  stage: build
-  script:
-    # create the executables for distribution
-    - ./gradlew --build-cache assembleDist --info
-    - mkdir bin
-    - cp cli/build/libs/*.jar bin/
-    - cp cli/build/distributions/*.zip bin/
-    # create checksum file to make sure we're distributing the right thing
-    - cd bin
-    - md5sum *.{jar,zip} > checksums.txt
-  artifacts:
-    name: "$CI_COMMIT_REF_NAME-snapshot"
-    paths:
-      - bin
-    expire_in: 1 week
-  cache:
-    key: "$CI_COMMIT_REF_NAME-$JAVA_VERSION"
-    policy: push
-    paths:
-      - build
-      - .gradle
-
 build:linux:jdk8:
   image: openjdk:8
   stage: build
   script:
     # create the executables for distribution
-    - ./gradlew --build-cache assembleDist --info
+    - ./gradlew --build-cache :cli:assembleDist --info
     - mkdir bin
-    - cp build/libs/*.jar bin/
-    - cp build/distributions/*.zip bin/
+    - cp cli/build/libs/*.jar bin/
+    - cp cli/build/distributions/*.zip bin/
     # create checksum file to make sure we're distributing the right thing
     - cd bin
     - md5sum *.{jar,zip} > checksums.txt
@@ -52,8 +29,7 @@ build:manual:
   image: registry.gitlab.com/islandoftex/images/texlive:latest
   stage: build
   script:
-    - cd docs
-    - arara -v checkcites-manual.tex
+    - ./gradlew buildManual
   artifacts:
     name: "$CI_COMMIT_REF_NAME-docs"
     paths:
@@ -73,7 +49,7 @@ test:dependencyupdates:
   script:
     - apt-get update
     - apt-get install -y --no-install-recommends zip
-    - ./gradlew -Prelease=$PRELEASE assembleCTAN --info
+    - ./gradlew -Prelease=$PRELEASE :cli:assembleCTAN --info
     - cp build/*.zip ./
   artifacts:
     name: "$CI_COMMIT_REF_NAME-ctan"
