@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: BSD-3-Clause
 package org.islandoftex.checkcites
 
 data class BibliographyEntry(val type: String, val key: String? = null, val fields: Map<String, String>)
@@ -35,7 +36,7 @@ class BibTeXParser {
             }
 
             var limit = -1
-            for (i in (it.range.last + 1)..text.length -1) {
+            for (i in (it.range.last + 1)..text.length - 1) {
                 when (text[i]) {
                     '{' -> bracketCounter++
                     '}' -> bracketCounter--
@@ -108,11 +109,9 @@ class BibTeXParser {
                 }
 
                 range = IntRange(value.second + pair.second.last, text.length - 1)
-
             } else {
                 range = IntRange.EMPTY
             }
-
         }
 
         return BibliographyEntry(type, key, fields)
@@ -124,7 +123,6 @@ class BibTeXParser {
         }
             ?: Pair("", IntRange.EMPTY)
     }
-
 
     private fun extractLine(text: String): Pair<List<String>, Int> {
         var range = IntRange(0, text.length - 1)
@@ -147,7 +145,6 @@ class BibTeXParser {
                 range = IntRange(range.last + 1, text.length - 1)
                 limit = range.first
             }
-
         }
 
         return Pair(result, limit)
@@ -198,7 +195,6 @@ class BibTeXParser {
                 limit = i
                 break
             }
-
         }
 
         return if (limit != -1) IntRange(start, limit) else IntRange.EMPTY
@@ -228,5 +224,4 @@ class BibTeXParser {
 
         return if (valid) pair else Pair(IntRange.EMPTY, TextElement.EMPTY)
     }
-
 }
