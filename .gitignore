@@ -3,6 +3,7 @@
 .DS_Store
 .gradle
 .idea
+docs/version.tex
 **/build/*
 !buildSrc/src/**/build/*
 target
