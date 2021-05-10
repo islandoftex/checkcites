@@ -40,7 +40,7 @@ sourceSets {
 val moduleName = "org.islandoftex.checkcites"
 application {
     applicationName = rootProject.name
-    mainClassName = "$moduleName.ApplicationKt"
+    mainClass.set("$moduleName.ApplicationKt")
 }
 
 val appManifest: Manifest by extra(DefaultManifest(
@@ -59,8 +59,6 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn," +
-                    "kotlin.io.path.ExperimentalPathApi")
         }
     }
     named<JavaExec>("run") {
@@ -78,6 +76,7 @@ tasks {
         manifest.attributes.putAll(appManifest.attributes)
         archiveAppendix.set("jdk" + java.targetCompatibility.majorVersion + "-with-deps")
         archiveClassifier.set("")
+        minimize()
     }
     named<Task>("assembleDist").configure { dependsOn("shadowJar") }
 }

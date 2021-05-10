@@ -17,9 +17,9 @@ kotlin {
     }
 
     sourceSets {
-        all {
-            languageSettings.useExperimentalAnnotation("kotlin.time.ExperimentalTime")
-        }
+        //all {
+        //    languageSettings.useExperimentalAnnotation("kotlin.time.ExperimentalTime")
+        //}
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
