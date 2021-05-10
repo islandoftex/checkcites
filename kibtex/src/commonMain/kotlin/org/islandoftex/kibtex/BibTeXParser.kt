@@ -53,10 +53,10 @@ public class BibTeXParser {
             }
 
             limit.takeUnless { _ ->
-                !setOf("string", "preamble").contains(it.groupValues[1].toLowerCase()) &&
+                !setOf("string", "preamble").contains(it.groupValues[1].lowercase()) &&
                         it.groupValues[2] == "("
             }?.let { _ ->
-                Triple(it.groupValues[1].toLowerCase(), it.range.last + 1, limit)
+                Triple(it.groupValues[1].lowercase(), it.range.last + 1, limit)
             }
         }.toList()
 

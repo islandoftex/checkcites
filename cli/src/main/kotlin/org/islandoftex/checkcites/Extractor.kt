@@ -2,7 +2,6 @@
 package org.islandoftex.checkcites
 
 import java.nio.file.Path
-import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 import kotlin.io.path.div
 import kotlin.io.path.exists
@@ -25,7 +24,6 @@ data class LookupResolution(val searchPaths: List<Path>, val searchTree: Boolean
 
 class Extractor(private val mode: Mode, private val resolution: LookupResolution) {
 
-    @ExperimentalPathApi
     fun extract(files: List<Path>): Map<Path, CitationData> {
 
         return files.map {

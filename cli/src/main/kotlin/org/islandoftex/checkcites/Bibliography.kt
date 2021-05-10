@@ -2,7 +2,6 @@
 package org.islandoftex.checkcites
 
 import java.nio.file.Path
-import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.readLines
 import kotlin.io.path.readText
 import org.islandoftex.kibtex.BibTeXParser
@@ -11,7 +10,6 @@ data class BibliographyData(val type: String, val key: String, val crossrefs: Se
 
 class Bibliography {
 
-    @ExperimentalPathApi
     fun extract(
         files: List<Path>,
         ignoreTypes: Set<String>,
@@ -31,7 +29,6 @@ class Bibliography {
         }.toMap()
     }
 
-    @ExperimentalPathApi
     fun extract(files: List<Path>): Map<Path, Set<BibliographyData>> {
         return files.map {
             val text = it.readLines().joinToString(" ")
@@ -53,7 +50,7 @@ class Bibliography {
 
             it to entries.map { p ->
                 BibliographyData(
-                    p.value.first.toLowerCase(),
+                    p.value.first.lowercase(),
                     p.value.second,
                     crossrefs[mapping[p.key]] ?: emptySet()
                 )
