@@ -82,6 +82,10 @@ tasks {
     register<CTANBuilderTask>("assembleCTAN") {
         dependsOn("assembleTDSZip")
     }
+
+    withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 detekt {
