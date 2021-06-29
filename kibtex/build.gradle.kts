@@ -1,4 +1,4 @@
-import org.islandoftex.checkcites.build.Versions
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("multiplatform")
@@ -17,9 +17,7 @@ kotlin {
     }
 
     sourceSets {
-        //all {
-        //    languageSettings.useExperimentalAnnotation("kotlin.time.ExperimentalTime")
-        //}
+        val versions = org.islandoftex.checkcites.build.Versions
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
@@ -27,17 +25,14 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation("io.kotest:kotest-framework-engine:${Versions.kotest}")
+                implementation(kotlin("test-junit5"))
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}")
             }
         }
     }
@@ -46,5 +41,12 @@ kotlin {
 tasks {
     named<Test>("jvmTest") {
         useJUnitPlatform()
+
+        testLogging {
+            events(
+                TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_ERROR, TestLogEvent.STANDARD_OUT
+            )
+        }
     }
 }
