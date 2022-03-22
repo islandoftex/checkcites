@@ -4,10 +4,11 @@ checkcites.lua -- Version 2.4 from September 3, 2019.
 License
 -------
 
-Copyright (c) 2012, 2019 Enrico Gregorio, Paulo Roberto Massa Cereda
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda
+Copyright (c) 2022, Enrico Gregorio, Island of TeX
 
 - Enrico dot Gregorio at univr dot it
-- cereda at users dot sf dot net
+- https://gitlab.com/islandoftex
 
 This script is licensed under the LaTeX Project Public License.
 If you want to support LaTeX development by a donation, the best
@@ -92,6 +93,8 @@ time checkcites also looks for bibliography data, in the form of
 extract the bibliography data and add them to a table. Again, no duplicate
 values are allowed. Stick with this backend if you are using BibLaTeX with
 the default options or with the 'backend=biber' option explicitly set.
+It is important to note, however, that the 'glob=true' option is not
+supported yet.
 
 Open a terminal and run checkcites:
 
@@ -146,4 +149,4 @@ That is it, folks!
 Official code repository
 ------------------------
 
-http://github.com/cereda/checkcites
+http://gitlab.com/islandoftex/checkcites

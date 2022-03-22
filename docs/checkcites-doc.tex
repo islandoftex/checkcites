@@ -15,12 +15,12 @@
 \usepackage[svgnames]{xcolor}
 \usepackage[colorlinks, linkcolor={blue}, urlcolor={blue}]{hyperref}
 
-\usepackage{tcolorbox}
+\usepackage[breakable]{tcolorbox}
 \tcbuselibrary{listings}
 
 \newcommand{\checkcites}{\texttt{checkcites}}
 \newcommand{\email}[1]{\small\texttt{#1}}
-\newcommand{\version}{Version 2.4 from September 3, 2019.}
+\newcommand{\version}{Version 2.5 from March 3, 2022.}
 
 \newenvironment{infoblock}[1]
   {\par\addvspace{\medskipamount}
@@ -34,8 +34,8 @@
 
 \title{The \checkcites\footnote{\version}\ \ script}
 \author{%
-  Enrico Gregorio\\\email{Enrico dot Gregorio at univr dot it}\\[3ex]
-  Paulo Roberto Massa Cereda\\\email{cereda at users dot sf dot net}%
+  Enrico Gregorio\\\email{Enrico.Gregorio@univr.it}\\[3ex]
+  Island of \TeX\\\email{https://gitlab.com/islandoftex}%
 }
 \date{}
 
@@ -103,7 +103,8 @@ citation  table  contains  no  duplicate values.  At  the  same  time
 script will  extract the bibliography data  and add them to  a table.
 Again, no  duplicate values are  allowed. Stick with this  backend if
 you  are  using Bib\LaTeX\  with  the  default  options or  with  the
-\verb|backend=biber| option explicitly set.
+\verb|backend=biber| option explicitly set. It  is important to note,
+however, that the \verb|glob=true| option is not supported yet.
 \end{description}
 
 \begin{infoblock}{Attention!}
@@ -150,7 +151,7 @@ sample  bibliography  file  \verb|example.bib|, with  five  fictional
 entries.
 
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
-                   title=Bibliography file, fonttitle=\bfseries,
+                   title=Bibliography file, fonttitle=\bfseries, breakable,
                    listing options={columns=fullflexible,basicstyle=\ttfamily}}
 @BOOK{foo:2012a,
   title = {My Title One},
@@ -227,8 +228,9 @@ $ checkcites
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.4)
-Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.5)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda
+Copyright (c) 2022, Enrico Gregorio, Island of TeX
 
 --------------------------------------------------------------------------
 I am sorry, but you have not provided any command line argument, including
@@ -263,8 +265,9 @@ $ checkcites --help
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.1)
-Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.5)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda
+Copyright (c) 2022, Enrico Gregorio, Island of TeX
 
 Usage: checkcites.lua [ [ --all | --unused | --undefined ] [ --backend
 <arg> ] <file> [ <file 2> ... <file n> ] | --help | --version ]
@@ -324,8 +327,9 @@ $ checkcites document.aux
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.4)
-Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.5)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda
+Copyright (c) 2022, Enrico Gregorio, Island of TeX
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
 me check this file and extract the references. Please wait a moment.
@@ -465,8 +469,9 @@ $ checkcites --backend biber document.bcf
 |  _|   | -_|  _| '_|  _| |  _| -_|_ -|
 |___|_|_|___|___|_,_|___|_|_| |___|___|
 
-checkcites.lua -- a reference checker script (v2.4)
-Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Roberto Massa Cereda
+checkcites.lua -- a reference checker script (v2.5)
+Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda
+Copyright (c) 2022, Enrico Gregorio, Island of TeX
 
 Great, I found 4 citations in 1 file. I also found 1 bibliography file. Let
 me check this file and extract the references. Please wait a moment.
