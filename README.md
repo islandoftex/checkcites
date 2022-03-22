@@ -1,6 +1,5 @@
 # `checkcites.lua`
 
-
 ## License
 
 This script is licensed under the LaTeX Project Public License.
@@ -56,6 +55,8 @@ time `checkcites` also looks for bibliography data, in the form of
 extract the bibliography data and add them to a table. Again, no duplicate
 values are allowed. Stick with this backend if you are using BibLaTeX with
 the default options or with the `backend=biber` option explicitly set.
+It is important to note, however, that the `glob=true` option is not
+supported yet.
 
 ## Command line
 
