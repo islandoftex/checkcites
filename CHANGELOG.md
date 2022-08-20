@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6] - 2022-08-20
+
+### Fixed
+
+* The `biblatex` backend failed due to an update in the `.bcf` format.
+  (see #4)
+
 ## [2.5] - 2022-03-22
 
 ### Fixed
@@ -20,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Support for `bibtex` and `biblatex` backends.
 
-[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.5...master
+[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.6...master
+[2.6]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.6
 [2.5]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.5
 [2.4]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.4
