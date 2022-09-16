@@ -1,11 +1,5 @@
 # `checkcites.lua`
 
-## License
-
-This script is licensed under the LaTeX Project Public License.
-If you want to support LaTeX development by a donation, the best
-way to do this is donating to the TeX Users Group.
-
 ## About
 
 `checkcites` is a Lua script written for the sole purpose of detecting
@@ -22,7 +16,7 @@ used. We decided to write a script to check references. We opted for
 Lua, since it's a very straightforward language and it has an
 interpreter available on every modern TeX distribution.
 
-# Usage
+## Usage
 
 The script is pretty simple to use. The only requirement is a recent
 TeX distribution, such as TeX Live.
@@ -30,7 +24,7 @@ TeX distribution, such as TeX Live.
 `checkcites` uses the generated auxiliary files to start the analysis.
 From version 2.0 on, the scripts supports two backends:
 
-## `bibtex`
+### `bibtex`
 
 Default behavior, the script checks `.aux` files looking for citations,
 in the form of `\citation{a}`. For every `\citation` line found, `checkcites`
@@ -44,7 +38,7 @@ data and add them to a table, even if they are separated by commas, like
 backend if you are using BibTeX or BibLaTeX with the `backend=bibtex`
 package option.
 
-## `biber`
+### `biber`
 
 With this backend, the script checks `.bcf` files (which are XML-based)
 looking for citations, in the form of `bcf:citekey` tags. For every tag
@@ -58,7 +52,7 @@ the default options or with the `backend=biber` option explicitly set.
 It is important to note, however, that the `glob=true` option is not
 supported yet.
 
-## Command line
+### Command line
 
 Open a terminal and run `checkcites`:
 
@@ -124,4 +118,14 @@ Note the `--backend` flag used for BibLaTeX support. We can even omit the
 file extension, the script will automatically assign one based on the
 current backend.
 
-That is it, folks!
+## License
+
+This script is licensed under the LaTeX Project Public License.
+If you want to support LaTeX development by a donation, the best
+way to do this is donating to the TeX Users Group.
+
+## The team
+
+checkcites is brought to you by the Island of TeX. If you want to support TeX
+development by a donation, the best way to do this is donating to the
+[TeX Users Group](https://www.tug.org/donate.html).
