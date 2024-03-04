@@ -674,11 +674,13 @@ local function toJson(file, schema)
   string = string .. '  },\n'
   string = string .. '  "results" : {\n'
   string = string .. '    "unused" : {\n'
-  string = string .. '      "status" : "' .. (exists({'unused', 'all'}, schema['check']) and 'active' or 'inactive') .. '",\n'
+  string = string .. '      "status" : "' .. (exists({'unused', 'all'}, schema['check'])
+                                             and 'active' or 'inactive') .. '",\n'
   string = string .. '      "occurrences" : ' .. toArray(schema['unused']) .. '\n'
   string = string .. '    },\n'
   string = string .. '    "undefined" : {\n'
-  string = string .. '      "status" : "' .. (exists({'undefined', 'all'}, schema['check']) and 'active' or 'inactive') .. '",\n'
+  string = string .. '      "status" : "' .. (exists({'undefined', 'all'}, schema['check'])
+                                             and 'active' or 'inactive') .. '",\n'
   string = string .. '      "occurrences" : ' .. toArray(schema['undefined']) .. '\n'
   string = string .. '    }\n'
   string = string .. '  }\n'
