@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7] - 2024-03-02
+
+### Added
+
+* A new `--json` command line flag was added to export the generated
+  analysis to a JSON file.
+
 ## [2.6] - 2022-08-20
 
 ### Fixed
@@ -27,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Support for `bibtex` and `biblatex` backends.
 
-[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.6...master
+[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.7...master
+[2.7]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.7
 [2.6]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.6
 [2.5]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.5
 [2.4]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.4
