@@ -2,7 +2,7 @@
 -- -----------------------------------------------------------------
 -- checkcites.lua
 -- Copyright 2012, 2019, Enrico Gregorio, Paulo Cereda
--- Copyright 2024, Enrico Gregorio, Island of TeX
+-- Copyright 2022, 2024, Enrico Gregorio, Island of TeX
 --
 -- This work may be distributed and/or modified under the conditions
 -- of the LaTeX  Project Public License, either version  1.3 of this
@@ -486,9 +486,9 @@ print("|  _|   | -_|  _| '_|  _| |  _| -_|_ -|")
 print("|___|_|_|___|___|_,_|___|_|_| |___|___|")
 print()
   print(wrap('checkcites.lua -- a reference ' ..
-             'checker script (v2.6)', 74))
+             'checker script (v2.7)', 74))
   print(wrap('Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda', 74))
-  print(wrap('Copyright (c) 2022, Enrico Gregorio, Island of TeX', 74))
+  print(wrap('Copyright (c) 2022, 2024, Enrico Gregorio, Island of TeX', 74))
 end
 
 -- Operation namespace
