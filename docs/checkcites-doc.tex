@@ -66,10 +66,11 @@ straightforward language and it has an interpreter available on every
 modern \TeX\ distribution.
 
 \begin{infoblock}{Attention!}
-From version 2.1 on, \checkcites\ relies on specific libraries available
-in the \verb|texlua| ecosystem and thus is not be supported in vanilla
-\verb|lua| interpreters. Please make sure to use this script with an
-updated \verb|texlua| interpreter in order to ensure the correct behaviour.
+From  version  2.1  on,  \checkcites\  relies  on  specific  libraries
+available in the \verb|texlua| ecosystem  and thus is not be supported
+in  vanilla \verb|lua|  interpreters.  Please make  sure  to use  this
+script with  an updated \verb|texlua|  interpreter in order  to ensure
+the correct behaviour.
 \end{infoblock}
 
 \section{How the script works}
@@ -499,9 +500,11 @@ Undefined references in your TeX document: 1
 \end{verbatim}
 \end{terminal}
 
-If you rely on cross-references in your bibliography file, \checkcites\ might complain about
-unused entries. We can try the experimental feature available from version 2.3 on that attempts
-to check cross-references through the \verb|--crossrefs| command line flag:
+If   you  rely   on  cross-references   in  your   bibliography  file,
+\checkcites\  might complain  about  unused entries.  We  can try  the
+experimental feature  available from version  2.3 on that  attempts to
+check  cross-references through  the  \verb|--crossrefs| command  line
+flag:
 
 \begin{terminal}
 \begin{verbatim}
@@ -509,11 +512,12 @@ $ checkcites --crossrefs document.aux
 \end{verbatim}
 \end{terminal}
 
-This feature is disabled by default and it is known to work with both \verb|bibtex| and \verb|biber|
-backends. Please report if you find an issue.
+This feature is disabled by default and  it is known to work with both
+\verb|bibtex| and \verb|biber| backends. Please  report if you find an
+issue.
 
-From version 2.7 on, \checkcites\ can export the reference report to a JSON file through the
-\verb|--json| command line flag:
+From version 2.7 on, \checkcites\ can export the reference report to a
+JSON file through the \verb|--json| command line flag:
 
 \begin{terminal}
 \begin{verbatim}
@@ -521,7 +525,8 @@ $ checkcites document.aux --json report.json
 \end{verbatim}
 \end{terminal}
 
-The script will generate a file named \verb|report.json| with the following structure and content:
+The  script will  generate a  file named  \verb|report.json| with  the
+following structure and content:
 
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
   title=JSON file, fonttitle=\bfseries, breakable,
@@ -551,12 +556,16 @@ The script will generate a file named \verb|report.json| with the following stru
 }  
 \end{tcblisting}
 
-Note that the JSON file has three main groups. The first group contains the execution settings and has
-the backend used, a description of the operation being performed, and whether cross-references checks
-were enabled. The second group contains relevant information about the project itself, such as whether
-all references will be cited (when \verb|\nocite{*}| is found), and the list of bibliographies, citations and cross-references found.
-Finally, the third group contains the analysis results, with a special \verb|active| key that indicates
-whether that particular check has been performed, and a list of occurrences. That is all, folks!
+Note  that   the  JSON   file  has  three   main  groups.   The  first
+group  contains  the execution  settings  and  has the  backend  used,
+a  description   of  the   operation  being  performed,   and  whether
+cross-references  checks  were  enabled.  The  second  group  contains
+relevant information  about the  project itself,  such as  whether all
+references will  be cited (when  \verb|\nocite{*}| is found),  and the
+list of bibliographies, citations and cross-references found. Finally,
+the  third  group  contains  the  analysis  results,  with  a  special
+\verb|active|  key that  indicates whether  that particular  check has
+been performed, and a list of occurrences. That is all, folks!
 
 \section{License}
 \label{sec:license}
