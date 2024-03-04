@@ -526,36 +526,36 @@ The script will generate a file named \verb|report.json| with the following stru
 \begin{tcblisting}{colframe=DarkTurquoise,coltitle=black,listing only,
   title=JSON file, fonttitle=\bfseries, breakable,
   listing options={columns=fullflexible,basicstyle=\ttfamily}}
-  {
-    "settings" : {
-      "backend" : "bibtex",
-      "operation" : "list all unused and undefined references",
-      "crossrefs" : "disabled"
+{
+  "settings" : {
+    "backend" : "bibtex",
+    "operation" : "list all unused and undefined references",
+    "crossrefs" : false
+  },
+  "project" : {
+    "forcibly_cite_all" : false,
+    "bibliographies" : [ "example" ],
+    "citations" : [ "foo:2012a", "foo:2012c", "foo:2012f", "foo:2012d" ],
+    "crossrefs" : []
+  },
+  "results" : {
+    "unused" : {
+      "active" : true,
+      "occurrences" : [ "foo:2012b", "foo:2012e" ]
     },
-    "project" : {
-      "asterisk" : "absent",
-      "bibliographies" : [ "example" ],
-      "citations" : [ "foo:2012a", "foo:2012c", "foo:2012f", "foo:2012d" ],
-      "crossrefs" : []
-    },
-    "results" : {
-      "unused" : {
-        "status" : "active",
-        "occurrences" : [ "foo:2012b", "foo:2012e" ]
-      },
-      "undefined" : {
-        "status" : "active",
-        "occurrences" : [ "foo:2012f" ]
-      }
+    "undefined" : {
+      "status" : true,
+      "occurrences" : [ "foo:2012f" ]
     }
   }
+}  
 \end{tcblisting}
 
 Note that the JSON file has three main groups. The first group contains the execution settings and has
 the backend used, a description of the operation being performed, and whether cross-references checks
 were enabled. The second group contains relevant information about the project itself, such as whether
-an asterisk has been provided, and the list of bibliographies, citations and cross-references found.
-Finally, the third group contains the analysis results, with a special \verb|status| key that indicates
+all references will be cited (when \verb|\nocite{*}| is found), and the list of bibliographies, citations and cross-references found.
+Finally, the third group contains the analysis results, with a special \verb|active| key that indicates
 whether that particular check has been performed, and a list of occurrences. That is all, folks!
 
 \section{License}
