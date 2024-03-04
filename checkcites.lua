@@ -2,7 +2,7 @@
 -- -----------------------------------------------------------------
 -- checkcites.lua
 -- Copyright 2012, 2019, Enrico Gregorio, Paulo Cereda
--- Copyright 2022, 2024, Enrico Gregorio, Island of TeX
+-- Copyright 2024, Enrico Gregorio, Island of TeX
 --
 -- This work may be distributed and/or modified under the conditions
 -- of the LaTeX  Project Public License, either version  1.3 of this
@@ -488,7 +488,7 @@ print()
   print(wrap('checkcites.lua -- a reference ' ..
              'checker script (v2.7)', 74))
   print(wrap('Copyright (c) 2012, 2019, Enrico Gregorio, Paulo Cereda', 74))
-  print(wrap('Copyright (c) 2022, 2024, Enrico Gregorio, Island of TeX', 74))
+  print(wrap('Copyright (c) 2024, Enrico Gregorio, Island of TeX', 74))
 end
 
 -- Operation namespace
@@ -664,23 +664,23 @@ local function toJson(file, schema)
   string = string .. '  "settings" : {\n'
   string = string .. '    "backend" : "' .. schema['backend'] .. '",\n'
   string = string .. '    "operation" : "' .. getOperation(schema['check']) .. '",\n'
-  string = string .. '    "crossrefs" : "' .. ((schema['crossrefs'] and 'enabled') or 'disabled') .. '"\n'
+  string = string .. '    "crossrefs" : ' .. ((schema['crossrefs'] and 'true') or 'false') .. '\n'
   string = string .. '  },\n'
   string = string .. '  "project" : {\n'
-  string = string .. '    "asterisk" : "' .. schema['asterisk'] .. '",\n'
+  string = string .. '    "forcibly_cite_all" : ' .. schema['asterisk'] .. ',\n'
   string = string .. '    "bibliographies" : ' .. toArray(schema['bibliographies']) .. ',\n'
   string = string .. '    "citations" : ' .. toArray(schema['citations']) .. ',\n'
   string = string .. '    "crossrefs" : ' .. toArray(schema['crossrefs'] or {}) .. '\n'
   string = string .. '  },\n'
   string = string .. '  "results" : {\n'
   string = string .. '    "unused" : {\n'
-  string = string .. '      "status" : "' .. (exists({'unused', 'all'}, schema['check'])
-                                             and 'active' or 'inactive') .. '",\n'
+  string = string .. '      "active" : ' .. (exists({'unused', 'all'}, schema['check'])
+                                             and 'true' or 'false') .. ',\n'
   string = string .. '      "occurrences" : ' .. toArray(schema['unused']) .. '\n'
   string = string .. '    },\n'
   string = string .. '    "undefined" : {\n'
-  string = string .. '      "status" : "' .. (exists({'undefined', 'all'}, schema['check'])
-                                             and 'active' or 'inactive') .. '",\n'
+  string = string .. '      "status" : ' .. (exists({'undefined', 'all'}, schema['check'])
+                                             and 'true' or 'false') .. ',\n'
   string = string .. '      "occurrences" : ' .. toArray(schema['undefined']) .. '\n'
   string = string .. '    }\n'
   string = string .. '  }\n'
@@ -879,7 +879,7 @@ local function checkcites(args)
 
   json['citations'] = citations
   json['bibliographies'] = bibliography
-  json['asterisk'] = (asterisk and 'found') or 'absent'
+  json['asterisk'] = (asterisk and 'true') or 'false'
 
   print()
   print(wrap('Great, I found ' .. tostring(#citations) .. ' ' ..
