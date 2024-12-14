@@ -388,7 +388,7 @@ backends.biber = function(lines, _)
       end
     else
       hit = string.match(line, '^%s*<bcf:datasource type="file" ' ..
-            'datatype="%w+" glob="false">(.+)</bcf:datasource>$')
+            'datatype="%w+".*>(.+)</bcf:datasource>$')
       if hit then
         parts = split(hit, '[^,%s]+')
         for _, v in ipairs(parts) do
