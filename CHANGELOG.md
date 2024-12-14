@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8] - 2024-12-14
+
+### Fixed
+
+* The `biblatex` backend failed when `\bibliography` was used instead
+  of `\addbibresource`. Both scenarios are now covered.
+  (see #6)
+
 ## [2.7] - 2024-03-03
 
 ### Added
@@ -34,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Support for `bibtex` and `biblatex` backends.
 
-[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.7...master
+[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.8...master
+[2.8]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.8
 [2.7]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.7
 [2.6]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.6
 [2.5]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.5
