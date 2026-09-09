@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Support for `bibtex` and `biblatex` backends.
 
-[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.8...master
+[Unreleased]: https://gitlab.com/islandoftex/checkcites/compare/v2.8...main
 [2.8]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.8
 [2.7]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.7
 [2.6]: https://gitlab.com/islandoftex/checkcites/-/tags/v2.6
